@@ -6,7 +6,7 @@ import java.util.regex.*;
 
 public class Bai5 {
 
-    public static boolean ArmStrong(int numb) {
+    public static boolean armStrong(int numb) {
         int total = 0;
         int temp = numb;
         int digit;
@@ -28,7 +28,7 @@ public class Bai5 {
         int n = reader.nextInt();
         reader.close();
 
-        if (ArmStrong(n)) System.out.println("Yes");
+        if (armStrong(n)) System.out.println("Yes");
         else System.out.println("No");
         
     }

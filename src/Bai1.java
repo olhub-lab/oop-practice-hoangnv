@@ -6,7 +6,7 @@ import java.util.regex.*;
 
 class Bai1 {
     
-    public static boolean checknt(int a) {
+    public static boolean checkPrime(int a) {
         if (a < 2) return false;
         for (int i = 2 ; i < Math.round(Math.sqrt(a) + 1); i++) {
             if (a % i == 0) return false;
@@ -21,7 +21,7 @@ class Bai1 {
         reader.close();
         if (a % 2 ==0) {
             System.out.println("So chan");
-            if (checknt(a)) {
+            if (checkPrime(a)) {
                 System.out.println("So nguyen to");
             }
             else {
@@ -30,7 +30,7 @@ class Bai1 {
         }
         else {
             System.out.println("So le");
-            if (checknt(a)) {
+            if (checkPrime(a)) {
                 System.out.println("So nguyen to");
             }
             else {

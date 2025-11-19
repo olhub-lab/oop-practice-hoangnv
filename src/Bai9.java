@@ -5,7 +5,7 @@ import java.math.*;
 import java.util.regex.*;
 
 public class Bai9 {
-    public static boolean PerfectNumber(int numb) {
+    public static boolean perfectNumber(int numb) {
         int total = 0;
         for (int i = 1; i< numb; i++) {
             if (numb % i ==0) {
@@ -20,7 +20,7 @@ public class Bai9 {
         int n = reader.nextInt();
         reader.close();
 
-        if (PerfectNumber(n)) {
+        if (perfectNumber(n)) {
             System.out.println("yes");
         }
         else {
