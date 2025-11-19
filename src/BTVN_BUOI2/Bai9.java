@@ -1,8 +1,6 @@
-import java.io.*;
+package BTVN_BUOI2;
+
 import java.util.*;
-import java.text.*;
-import java.math.*;
-import java.util.regex.*;
 
 public class Bai9 {
     public static boolean perfectNumber(int numb) {

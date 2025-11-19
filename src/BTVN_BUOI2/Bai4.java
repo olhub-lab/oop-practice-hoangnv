@@ -1,8 +1,6 @@
-import java.io.*;
+package BTVN_BUOI2;
+
 import java.util.*;
-import java.text.*;
-import java.math.*;
-import java.util.regex.*;
 
 class Bai4 {
     public static int Cong(int n) {

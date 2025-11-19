@@ -1,8 +1,6 @@
-import java.io.*;
+package BTVN_BUOI2;
+
 import java.util.*;
-import java.text.*;
-import java.math.*;
-import java.util.regex.*;
 
 public class Bai7 {
     public static int Check(int numb) {

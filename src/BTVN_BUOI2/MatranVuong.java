@@ -1,3 +1,5 @@
+package BTVN_BUOI2;
+
 import java.util.Scanner;
 
 public class MatranVuong {
