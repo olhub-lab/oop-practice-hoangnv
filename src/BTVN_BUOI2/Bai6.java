@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Bai6 {
 
-    public static int LCM(int a, int b) {
+    public static int leastCommonMultiple(int a, int b) {
         int limit = a * b;
         int max = Math.max(a,b);
         
@@ -22,7 +22,7 @@ public class Bai6 {
         int b = reader.nextInt();
         reader.close();
 
-        System.out.println(LCM(a, b));
+        System.out.println(leastCommonMultiple(a, b));
         
     }
 }

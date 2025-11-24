@@ -3,7 +3,7 @@ package BTVN_BUOI2;
 import java.util.*;
 
 public class Bai7 {
-    public static int Check(int numb) {
+    public static int checkDivide(int numb) {
         int total = 0;
         int i = 1;
         while (i <= numb) {
@@ -20,6 +20,6 @@ public class Bai7 {
         int n = reader.nextInt();
         reader.close();
 
-        System.out.println(Check(n));
+        System.out.println(checkDivide(n));
     }
 }

@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Bai10 {
 
-    public static long LengthOfNumb(long numb) {
+    public static long lengthOfNumb(long numb) {
         long count = 0;
         while (numb > 0) {
             numb /= 10;
@@ -13,7 +13,7 @@ public class Bai10 {
         return count;
     }
     
-    public static long TotalOfNumb(long numb) {
+    public static long totalOfNumb(long numb) {
         long total = 0;
         long digit;
         long temp = numb;
@@ -29,8 +29,8 @@ public class Bai10 {
 
         long n = reader.nextLong();
         reader.close();
-        System.out.println(LengthOfNumb(n));
-        System.out.println(TotalOfNumb(n));
+        System.out.println(lengthOfNumb(n));
+        System.out.println(totalOfNumb(n));
 
 
     }

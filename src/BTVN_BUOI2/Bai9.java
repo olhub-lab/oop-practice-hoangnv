@@ -3,7 +3,7 @@ package BTVN_BUOI2;
 import java.util.*;
 
 public class Bai9 {
-    public static boolean perfectNumber(int numb) {
+    public static boolean checkPerfectNumber(int numb) {
         int total = 0;
         for (int i = 1; i< numb; i++) {
             if (numb % i ==0) {
@@ -18,7 +18,7 @@ public class Bai9 {
         int n = reader.nextInt();
         reader.close();
 
-        if (perfectNumber(n)) {
+        if (checkPerfectNumber(n)) {
             System.out.println("yes");
         }
         else {
