@@ -4,9 +4,9 @@ import java.util.Arrays;
 
 public class Sort {
     public static void selectionSort(int[] arr) {
-        for (int i = 0 ; i< arr.length-1; i++) {
+        for (int i = 0 ; i < arr.length-1; i++) {
             int min = i;
-            for (int j= i + 1; j < arr.length; j++) {
+            for (int j = i + 1; j < arr.length; j++) {
                 if (arr[min] > arr[j]) {
                     min = j;
                 }
@@ -16,15 +16,14 @@ public class Sort {
             arr[i] = temp;
         }
     }
-    
+
     public static void bubbleSort(int[] a) {
-        int temp;
         for (int i = 0; i < a.length-1; i++) {
-            for (int j = i + 1; j < a.length; j++) {
-                if (a[i] > a[j]) {
-                    temp = a[j];
-                    a[j] = a[i];
-                    a[i] = temp;
+            for (int j = 0; j < a.length - i - 1; j++) {
+                if (a[j] > a[j+1]) {
+                    int temp = a[j];
+                    a[j] = a[j+1];
+                    a[j+1] = temp;
                 }
             }
         }
