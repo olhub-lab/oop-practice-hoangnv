@@ -3,40 +3,25 @@ package homework2;
 import java.util.Scanner;
 
 public class MyQuickSort {
+  public static void quickSort(int[] arr, int l, int r) {
+    if (l >= r) return;
 
-  public int[] sort(int[] arr) {
-    quickSort(arr, 0, arr.length - 1);
-    return arr;
-  }
-
-  public void quickSort(int[] arr, int low, int high) {
-    if (low < high) {
-      int pi = partition(arr, low, high);
-
-      quickSort(arr, low, pi - 1);
-      quickSort(arr, pi + 1, high);
-    }
-  }
-
-  public int partition(int[] arr, int low, int high) {
-    int pivot = arr[high];
-    int i = (low - 1);
-
-    for (int j = low; j < high; j++) {
-      if (arr[j] < pivot) {
-        i++;
-
+    int i = l;
+    int j = r;
+    int pivot = arr[(l + r) / 2];
+    while (i <= j) {
+      while (arr[i] < pivot) i++;
+      while (arr[j] > pivot) j--;
+      if (i <= j) {
         int temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
+        i++;
+        j--;
       }
     }
-
-    int temp = arr[i + 1];
-    arr[i + 1] = arr[high];
-    arr[high] = temp;
-
-    return i + 1;
+    if (l < j) quickSort(arr,l, j);
+    if (i < r) quickSort(arr,i,r);
   }
 
   public static void main(String[] args) {
@@ -48,10 +33,11 @@ public class MyQuickSort {
       arr[i] = sc.nextInt();
     }
 
-    MyQuickSort ms = new MyQuickSort();
-    int[] sortedArray = ms.sort(arr);
-    for (int i : sortedArray) {
-      System.out.print(i + " ");
+    quickSort(arr, 0, n - 1);
+
+    for (int i = 0; i < n; i++) {
+      System.out.print(arr[i] + " ");
     }
+    sc.close();
   }
 }
