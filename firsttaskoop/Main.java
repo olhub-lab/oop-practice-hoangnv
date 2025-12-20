@@ -1,6 +1,7 @@
 package firsttaskoop;
 
 import java.util.Scanner;
+import java.math.BigDecimal;
 
 public class Main {
 
@@ -11,7 +12,7 @@ public class Main {
     int n = sc.nextInt();
     sc.nextLine();
 
-    Vehicles[] danhSachXe = new Vehicles[n];
+    Vehicles[] carList = new Vehicles[n];
     for (int i = 0; i < n; i++) {
       System.out.println("Nhập thông tin xe thứ " + (i + 1));
       System.out.println("Chọn loại xe:");
@@ -23,51 +24,51 @@ public class Main {
       sc.nextLine();
 
       System.out.print("Tên Model: ");
-      String ten = sc.nextLine();
+      String birthYeare = sc.nextLine();
       System.out.print("Hãng sản xuất: ");
-      String hang = sc.nextLine();
+      String manufacturer = sc.nextLine();
       System.out.print("Năm sản xuất: ");
-      int nam = sc.nextInt();
+      int birthYear = sc.nextInt();
       sc.nextLine();
       System.out.print("Giá gốc: ");
-      double giaGoc = sc.nextDouble();
+      BigDecimal originalPrice = sc.nextBigDecimal();
       sc.nextLine();
       System.out.print("Xuất xứ (Trong nuoc/ Ngoai nuoc): ");
-      String xuatXu = sc.nextLine();
+      String origin = sc.nextLine();
 
       switch (choice) {
         case 1:
           System.out.print("Số chỗ ngồi: ");
-          int choNgoi = sc.nextInt();
+          int seatNumber = sc.nextInt();
           sc.nextLine();
           System.out.print("Loại nhiên liệu (xăng/dầu/điện): ");
-          String loaiNhienLieu = sc.nextLine();
+          String typeOfField = sc.nextLine();
           System.out.print("Dung tích động cơ: ");
-          int dungTich = sc.nextInt();
+          int capacity = sc.nextInt();
           sc.nextLine();
           System.out.print("Loại thân xe: ");
-          String loaiThanXe = sc.nextLine();
-          danhSachXe[i] = new Car(ten, hang, nam, giaGoc, xuatXu, choNgoi, loaiNhienLieu, dungTich,
-              loaiThanXe);
+          String bodyType = sc.nextLine();
+          carList[i] = new Car(birthYeare, manufacturer, birthYear, originalPrice, origin, seatNumber, typeOfField, capacity,
+              bodyType);
           break;
         case 2:
           System.out.print("Dung tích xi-lanh: ");
-          int dungTichXiLanh = sc.nextInt();
+          int cylinderCapacity = sc.nextInt();
           sc.nextLine();
           System.out.print("Loại xe (xe số/xe ga): ");
-          String loaiXe = sc.nextLine();
+          String typeOfMotorBike = sc.nextLine();
           System.out.print("Công suất: ");
-          int congSuat = sc.nextInt();
+          int power = sc.nextInt();
           sc.nextLine();
-          danhSachXe[i] = new MotorBike(ten, hang, nam, giaGoc, xuatXu, dungTichXiLanh, congSuat,
-              loaiXe);
+          carList[i] = new MotorBike(birthYeare, manufacturer, birthYear, originalPrice, origin, cylinderCapacity, power,
+              typeOfMotorBike);
           break;
         case 3:
           System.out.print("Loại xe (Xe đạp thường/trợ lực điện): ");
-          String loaiXeDap = sc.nextLine();
+          String bikeType = sc.nextLine();
           System.out.print("Chất liệu khung: ");
-          String chatLieu = sc.nextLine();
-          danhSachXe[i] = new Bike(ten, hang, nam, giaGoc, xuatXu, chatLieu, loaiXeDap);
+          String frameMaterial = sc.nextLine();
+          carList[i] = new Bike(birthYeare, manufacturer, birthYear, originalPrice, origin, frameMaterial, bikeType);
           break;
         default:
           System.out.println("Nhập sai loại xe!!");
@@ -76,12 +77,12 @@ public class Main {
     }
     System.out.println("--------Danh Sách Phương Tiện--------");
     for (int j = 0; j < n; j++) {
-      danhSachXe[j].showThongTinCoBan();
+      carList[j].giveBasicInformation();
       System.out.println("--------Thuế áp dụng--------");
-      danhSachXe[j].showThueApDung();
+      carList[j].giveApplicableTax();
       System.out.println();
       System.out.println("--------Tổng giá lăn bánh--------");
-      System.out.printf("Tổng giá lăn bánh %.2f", danhSachXe[j].tinhGiaLanBanh());
+      System.out.printf("Tổng giá lăn bánh %.2f", carList[j].calculatePrice());
     }
     sc.close();
   }

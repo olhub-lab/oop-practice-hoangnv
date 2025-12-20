@@ -1,32 +1,36 @@
 package firsttaskoop;
 
+import java.math.BigDecimal;
+
 public class Bike extends Vehicles {
 
-  private String loaiXe;
-  private String chatLieuKhung;
+  private static final BigDecimal BIKE_IMPORT_TAX = new BigDecimal("0.1");
+  private String bikeType;
+  private String frameMaterial;
 
-  public Bike(String modelTen, String hangSanXuat, int namSanXuat, double giaGoc, String xuatXu,
-      String loaiXe, String chatLieuKhung) {
-    super(modelTen, hangSanXuat, namSanXuat, giaGoc, xuatXu, 0.1);
-    this.loaiXe = loaiXe;
-    this.chatLieuKhung = chatLieuKhung;
+  public Bike(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
+      String origin,
+      String bikeType, String frameMaterial) {
+    super(nameModel, manufacturer, birthYear, originalPrice, origin, BIKE_IMPORT_TAX);
+    this.bikeType = bikeType;
+    this.frameMaterial = frameMaterial;
   }
 
   @Override
-  public double getThueTTDB() {
-    return 0;
+  public BigDecimal getExciseTax() {
+    return BigDecimal.ZERO;
   }
 
   @Override
-  public void showThueApDung() {
+  public void giveApplicableTax() {
     System.out.printf("Thuế nhập khẩu: %.2f || Thuế tiêu thụ đặc biệt: %.2f",
-        super.getThueNhapKhau(), getThueTTDB());
+        super.getImportTax(), getExciseTax());
   }
 
   @Override
-  public void showThongTinCoBan() {
-    super.showThongTinCoBan();
-    System.out.printf("Loại xe: %s\n", loaiXe);
-    System.out.printf("Chất liệu khung: %s\n", chatLieuKhung);
+  public void giveBasicInformation() {
+    super.giveBasicInformation();
+    System.out.printf("Loại xe: %s\n", bikeType);
+    System.out.printf("Chất liệu khung: %s\n", frameMaterial);
   }
 }

@@ -1,48 +1,53 @@
 package firsttaskoop;
 
+import java.math.BigDecimal;
+
 public abstract class Vehicles {
 
-  protected String modelTen;
-  protected String hangSanXuat;
-  protected int namSanXuat;
-  protected double giaGoc;
-  protected String xuatXu;
+  private static final BigDecimal VAT_RATE = new BigDecimal("0.1");
+  private static final String ORIGIN = "Trong nuoc";
+  protected String nameModel;
+  protected String manufacturer;
+  protected int birthYear;
+  protected BigDecimal originalPrice;
+  protected String origin;
+  protected BigDecimal importTax;
 
-  protected double thueNhapKhau;
-
-  public Vehicles(String modelTen, String hangSanXuat, int namSanXuat, double giaGoc, String xuatXu,
-      double thueNhapKhau) {
-    this.modelTen = modelTen;
-    this.hangSanXuat = hangSanXuat;
-    this.namSanXuat = namSanXuat;
-    this.giaGoc = giaGoc;
-    this.xuatXu = xuatXu;
-    this.thueNhapKhau = thueNhapKhau;
+  public Vehicles(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
+      String origin,
+      BigDecimal importTax) {
+    this.nameModel = nameModel;
+    this.manufacturer = manufacturer;
+    this.birthYear = birthYear;
+    this.originalPrice = originalPrice;
+    this.origin = origin;
+    this.importTax = importTax;
   }
 
-  public double getThueNhapKhau() {
-    if (xuatXu.equals("Trong nuoc")) {
-      return 0;
+  public BigDecimal getImportTax() {
+    if (origin.equalsIgnoreCase(ORIGIN)) {
+      return BigDecimal.ZERO;
     } else {
-      return giaGoc * thueNhapKhau;
+      return originalPrice.multiply(importTax);
     }
   }
 
-  public abstract double getThueTTDB();
+  public abstract BigDecimal getExciseTax();
 
-  public double tinhGiaLanBanh() {
-    double thueNhapKhau = getThueNhapKhau();
-    double thueTTDB = getThueTTDB();
-    double thueVAT = 0.1 * (giaGoc + thueNhapKhau + thueTTDB);
-    return giaGoc + thueVAT + thueTTDB + thueNhapKhau;
+  public BigDecimal calculatePrice() {
+    BigDecimal importTax = getImportTax();
+    BigDecimal exciseTax = getExciseTax();
+    BigDecimal priceBeforeVAT = originalPrice.add(importTax).add(exciseTax);
+    BigDecimal taxVAT = priceBeforeVAT.multiply(VAT_RATE);
+    return priceBeforeVAT.add(taxVAT);
   }
 
-  public void showThongTinCoBan() {
-    System.out.printf("Tên: %s\n", modelTen);
-    System.out.printf("Hãng %s\n", hangSanXuat);
-    System.out.printf("Năm sản xuất %d\n", namSanXuat);
-    System.out.printf("Xuất xứ: %s\n", xuatXu);
+  public void giveBasicInformation() {
+    System.out.printf("Tên: %s\n", nameModel);
+    System.out.printf("Hãng %s\n", manufacturer);
+    System.out.printf("Năm sản xuất %d\n", birthYear);
+    System.out.printf("Xuất xứ: %s\n", origin);
   }
 
-  abstract void showThueApDung();
+  abstract void giveApplicableTax();
 }

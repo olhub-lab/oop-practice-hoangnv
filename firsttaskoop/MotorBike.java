@@ -1,40 +1,43 @@
 package firsttaskoop;
 
+import java.math.BigDecimal;
+
 public class MotorBike extends Vehicles {
 
-  private int dungTich;
-  private String loaiXe;
-  private int congSuat;
+  private static final BigDecimal MOTORBIKE_IMPORT_TAX = new BigDecimal("0.3");
+  private int capacity;
+  private String typeOfMotorBike;
+  private int power;
 
-  public MotorBike(String modelTen, String hangSanXuat, int namSanXuat, double giaGoc,
-      String xuatXu, int dungTich, int congSuat, String loaiXe) {
-    super(modelTen, hangSanXuat, namSanXuat, giaGoc, xuatXu, 0.3);
-    this.dungTich = dungTich;
-    this.loaiXe = loaiXe;
-    this.congSuat = congSuat;
+  public MotorBike(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
+      String origin, int capacity, int power, String typeOfMotorBike) {
+    super(nameModel, manufacturer, birthYear, originalPrice, origin, MOTORBIKE_IMPORT_TAX);
+    this.capacity = capacity;
+    this.typeOfMotorBike = typeOfMotorBike;
+    this.power = power;
   }
 
   @Override
-  public double getThueTTDB() {
-    double giaCoSo = giaGoc + super.getThueNhapKhau();
-    if (dungTich < 150) {
-      return 0;
+  public BigDecimal getExciseTax() {
+    BigDecimal basePrice = originalPrice.add(super.getImportTax());
+    if (capacity < 150) {
+      return BigDecimal.ZERO;
     } else {
-      return giaCoSo * 0.2;
+      return basePrice.multiply(BigDecimal.valueOf(0.2));
     }
   }
 
   @Override
-  public void showThueApDung() {
+  public void giveApplicableTax() {
     System.out.printf("Thuế nhập khẩu: %.2f || Thuế tiêu thụ đặc biệt: %.2f",
-        super.getThueNhapKhau(), getThueTTDB());
+        super.getImportTax(), getExciseTax());
   }
 
   @Override
-  public void showThongTinCoBan() {
-    super.showThongTinCoBan();
-    System.out.printf("Dung tích xi-lanh: %d", dungTich);
-    System.out.printf("Loại xe: %s\n", loaiXe);
-    System.out.printf("Công suất: %d\n", congSuat);
+  public void giveBasicInformation() {
+    super.giveBasicInformation();
+    System.out.printf("Dung tích xi-lanh: %d", capacity);
+    System.out.printf("Loại xe: %s\n", typeOfMotorBike);
+    System.out.printf("Công suất: %d\n", power);
   }
 }
