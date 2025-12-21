@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 public class MotorBike extends Vehicles {
 
   private static final BigDecimal MOTORBIKE_IMPORT_TAX = new BigDecimal("0.3");
+  private static final int MOTORBIKE_CAPACITY = 150;
+  private static final BigDecimal HIGH_MOTORBIKE_CAPACITY_TAX = new BigDecimal("0.2");
   private int capacity;
   private String typeOfMotorBike;
   private int power;
@@ -20,10 +22,10 @@ public class MotorBike extends Vehicles {
   @Override
   public BigDecimal getExciseTax() {
     BigDecimal basePrice = originalPrice.add(super.getImportTax());
-    if (capacity < 150) {
+    if (capacity < MOTORBIKE_CAPACITY) {
       return BigDecimal.ZERO;
     } else {
-      return basePrice.multiply(BigDecimal.valueOf(0.2));
+      return basePrice.multiply(HIGH_MOTORBIKE_CAPACITY_TAX);
     }
   }
 

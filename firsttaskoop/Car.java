@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 public class Car extends Vehicles {
 
   private static final BigDecimal CAR_IMPORT_TAX = new BigDecimal("0.5");
+  private static final int CAR_CAPACITY = 3000;
+  private static final BigDecimal LOW_CAPACITY_TAX = new BigDecimal("0.5");
+  private static final BigDecimal HIGH_CAPACITY_TAX = new BigDecimal("1");
   private int seatNumber;
   private String typeOfField;
   private int capacity;
@@ -23,10 +26,10 @@ public class Car extends Vehicles {
   @Override
   public BigDecimal getExciseTax() {
     BigDecimal basePrice = originalPrice.add(super.getImportTax());
-    if (capacity < 3000) {
-      return basePrice.multiply(BigDecimal.valueOf(0.5));
+    if (capacity < CAR_CAPACITY) {
+      return basePrice.multiply(LOW_CAPACITY_TAX);
     } else {
-      return basePrice.multiply(BigDecimal.valueOf(1));
+      return basePrice.multiply(HIGH_CAPACITY_TAX);
     }
   }
 
