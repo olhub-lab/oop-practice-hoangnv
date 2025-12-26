@@ -2,7 +2,7 @@ package firsttaskoop;
 
 import java.math.BigDecimal;
 
-public class Car extends Vehicles {
+public class Car extends Vehicle {
 
   private static final BigDecimal CAR_IMPORT_TAX = new BigDecimal("0.5");
   private static final int CAR_CAPACITY = 3000;
@@ -15,8 +15,8 @@ public class Car extends Vehicles {
 
   public Car(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
       String origin,
-      int seatNumber, String typeOfField, int capacity, String bodyType) {
-    super(nameModel, manufacturer, birthYear, originalPrice, origin, CAR_IMPORT_TAX);
+      int seatNumber, String typeOfField, int capacity, String bodyType, int quantity) {
+    super(nameModel, manufacturer, birthYear, originalPrice, origin, CAR_IMPORT_TAX,quantity);
     this.seatNumber = seatNumber;
     this.typeOfField = typeOfField;
     this.capacity = capacity;

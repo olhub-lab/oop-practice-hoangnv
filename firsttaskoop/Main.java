@@ -1,5 +1,6 @@
 package firsttaskoop;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.math.BigDecimal;
 
@@ -7,12 +8,15 @@ public class Main {
 
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
-    System.out.println("Bạn muốn khai báo bao nhiêu loại phương tiện?");
+
+    System.out.println("Hãy nhập tên đại lý: ");
+    String nameDealer = sc.nextLine();
+    Dealership dealership = new Dealership(nameDealer);
+
+    System.out.println("Bạn muốn khai báo bao nhiêu loại phương tiện vào kho?");
 
     int n = sc.nextInt();
     sc.nextLine();
-
-    Vehicles[] carList = new Vehicles[n];
     for (int i = 0; i < n; i++) {
       System.out.println("Nhập thông tin xe thứ " + (i + 1));
       System.out.println("Chọn loại xe:");
@@ -24,7 +28,7 @@ public class Main {
       sc.nextLine();
 
       System.out.print("Tên Model: ");
-      String birthYeare = sc.nextLine();
+      String modelName = sc.nextLine();
       System.out.print("Hãng sản xuất: ");
       String manufacturer = sc.nextLine();
       System.out.print("Năm sản xuất: ");
@@ -48,8 +52,11 @@ public class Main {
           sc.nextLine();
           System.out.print("Loại thân xe: ");
           String bodyType = sc.nextLine();
-          carList[i] = new Car(birthYeare, manufacturer, birthYear, originalPrice, origin, seatNumber, typeOfField, capacity,
-              bodyType);
+          System.out.print("Số lượng: ");
+          int quantityOfCar = sc.nextInt();
+          dealership.addInventory(new Car(modelName, manufacturer, birthYear, originalPrice, origin,
+              seatNumber, typeOfField, capacity,
+              bodyType, quantityOfCar));
           break;
         case 2:
           System.out.print("Dung tích xi-lanh: ");
@@ -60,30 +67,80 @@ public class Main {
           System.out.print("Công suất: ");
           int power = sc.nextInt();
           sc.nextLine();
-          carList[i] = new MotorBike(birthYeare, manufacturer, birthYear, originalPrice, origin, cylinderCapacity, power,
-              typeOfMotorBike);
+          System.out.print("Số lượng: ");
+          int quantityOfMotorBike = sc.nextInt();
+          dealership.addInventory(new MotorBike(modelName, manufacturer, birthYear, originalPrice, origin,
+              cylinderCapacity, power,
+              typeOfMotorBike, quantityOfMotorBike));
           break;
         case 3:
           System.out.print("Loại xe (Xe đạp thường/trợ lực điện): ");
           String bikeType = sc.nextLine();
           System.out.print("Chất liệu khung: ");
           String frameMaterial = sc.nextLine();
-          carList[i] = new Bike(birthYeare, manufacturer, birthYear, originalPrice, origin, frameMaterial, bikeType);
+          System.out.print("Số lượng: ");
+          int quantityOfBike = sc.nextInt();
+          dealership.addInventory(new Bike(modelName, manufacturer, birthYear, originalPrice, origin,
+              frameMaterial, bikeType, quantityOfBike));
           break;
         default:
           System.out.println("Nhập sai loại xe!!");
           break;
       }
     }
-    System.out.println("--------Danh Sách Phương Tiện--------");
-    for (int j = 0; j < n; j++) {
-      carList[j].giveBasicInformation();
-      System.out.println("--------Thuế áp dụng--------");
-      carList[j].giveApplicableTax();
-      System.out.println();
-      System.out.println("--------Tổng giá lăn bánh--------");
-      System.out.printf("Tổng giá lăn bánh %.2f", carList[j].calculatePrice());
+
+    System.out.println("--------------------------------------");
+    System.out.println("Bạn muốn nhập bao nhiêu khách hàng?");
+    int numberCustomers = sc.nextInt();
+    sc.nextLine();
+    for (int k = 0; k < numberCustomers; k++) {
+      System.out.println("Nhập thông tin khách hàng thứ " + (k + 1));
+      System.out.print("Tên khách hàng: ");
+      String nameCustomer = sc.nextLine();
+      System.out.print("Số điện thoại: ");
+      String phoneNumber = sc.nextLine();
+      System.out.print("Địa chỉ: ");
+      String email = sc.nextLine();
+      System.out.print("Số dư ban đầu (nhập -1 để mặc định là 0): ");
+      BigDecimal balance = sc.nextBigDecimal();
+      sc.nextLine();
+
+      if (balance.compareTo(BigDecimal.ZERO) < 0) {
+        dealership.addCustomer(new Customer(nameCustomer, phoneNumber, email));
+      } else {
+        dealership.addCustomer(new Customer(nameCustomer, phoneNumber, email, balance));
+        System.out.println("Khách hàng " + numberCustomers + " có muốn mua xe không?");
+        System.out.println("1. Có || 2. Không");
+        int select = sc.nextInt(); sc.nextLine();
+        switch (select) {
+          case 1:
+            dealership.showInventory();
+            System.out.println("Chọn xe số mấy?");
+            int choice = sc.nextInt();
+            Vehicle choosenVehicle = dealership.getVehicleById(choice-1);
+            Customer choosenCustomer = dealership.showCustomerById(k);
+            if (choosenCustomer.buyVehicle(choosenVehicle)) {
+              System.out.println("Khách hàng " + nameCustomer + " đã mua xe " + choosenVehicle.getNameModel() + " thành công!!!");
+            }
+            else {
+              System.out.print("Nhập số tiền muốn nạp: "); BigDecimal price = sc.nextBigDecimal(); sc.nextLine();
+              choosenCustomer.deposit(price);
+            }
+            break;
+          case 2:
+            System.out.println("Vạn sự tùy duyên hẹn khách hàng lần sau lại đến xem !!");
+            break;
+        }
+
+      }
     }
-    sc.close();
+
+    //Hiển thị số lượng khách hàng
+    System.out.println("Số lượng khách hàng");
+    for (int num = 0; num < numberCustomers; num++) {
+      System.out.println("Thông tin cơ bản của khách hàng thứ " + (num+1));
+      dealership.getCustomerById(num);
+    }
+
   }
 }
