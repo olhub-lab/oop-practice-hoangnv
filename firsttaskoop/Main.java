@@ -54,7 +54,7 @@ public class Main {
           String bodyType = sc.nextLine();
           System.out.print("Số lượng: ");
           int quantityOfCar = sc.nextInt();
-          dealership.addInventory(new Car(modelName, manufacturer, birthYear, originalPrice, origin,
+          dealership.addVehicle(new Car(modelName, manufacturer, birthYear, originalPrice, origin,
               seatNumber, typeOfField, capacity,
               bodyType, quantityOfCar));
           break;
@@ -69,9 +69,10 @@ public class Main {
           sc.nextLine();
           System.out.print("Số lượng: ");
           int quantityOfMotorBike = sc.nextInt();
-          dealership.addInventory(new MotorBike(modelName, manufacturer, birthYear, originalPrice, origin,
-              cylinderCapacity, power,
-              typeOfMotorBike, quantityOfMotorBike));
+          dealership.addVehicle(
+              new MotorBike(modelName, manufacturer, birthYear, originalPrice, origin,
+                  cylinderCapacity, power,
+                  typeOfMotorBike, quantityOfMotorBike));
           break;
         case 3:
           System.out.print("Loại xe (Xe đạp thường/trợ lực điện): ");
@@ -80,8 +81,9 @@ public class Main {
           String frameMaterial = sc.nextLine();
           System.out.print("Số lượng: ");
           int quantityOfBike = sc.nextInt();
-          dealership.addInventory(new Bike(modelName, manufacturer, birthYear, originalPrice, origin,
-              frameMaterial, bikeType, quantityOfBike));
+          dealership.addVehicle(
+              new Bike(modelName, manufacturer, birthYear, originalPrice, origin,
+                  frameMaterial, bikeType, quantityOfBike));
           break;
         default:
           System.out.println("Nhập sai loại xe!!");
@@ -111,19 +113,23 @@ public class Main {
         dealership.addCustomer(new Customer(nameCustomer, phoneNumber, email, balance));
         System.out.println("Khách hàng " + numberCustomers + " có muốn mua xe không?");
         System.out.println("1. Có || 2. Không");
-        int select = sc.nextInt(); sc.nextLine();
+        int select = sc.nextInt();
+        sc.nextLine();
         switch (select) {
           case 1:
             dealership.showInventory();
             System.out.println("Chọn xe số mấy?");
             int choice = sc.nextInt();
-            Vehicle choosenVehicle = dealership.getVehicleById(choice-1);
+            Vehicle choosenVehicle = dealership.getVehicleById(choice - 1);
             Customer choosenCustomer = dealership.showCustomerById(k);
             if (choosenCustomer.buyVehicle(choosenVehicle)) {
-              System.out.println("Khách hàng " + nameCustomer + " đã mua xe " + choosenVehicle.getNameModel() + " thành công!!!");
-            }
-            else {
-              System.out.print("Nhập số tiền muốn nạp: "); BigDecimal price = sc.nextBigDecimal(); sc.nextLine();
+              System.out.println(
+                  "Khách hàng " + nameCustomer + " đã mua xe " + choosenVehicle.getNameModel()
+                      + " thành công!!!");
+            } else {
+              System.out.print("Nhập số tiền muốn nạp: ");
+              BigDecimal price = sc.nextBigDecimal();
+              sc.nextLine();
               choosenCustomer.deposit(price);
             }
             break;
@@ -138,7 +144,7 @@ public class Main {
     //Hiển thị số lượng khách hàng
     System.out.println("Số lượng khách hàng");
     for (int num = 0; num < numberCustomers; num++) {
-      System.out.println("Thông tin cơ bản của khách hàng thứ " + (num+1));
+      System.out.println("Thông tin cơ bản của khách hàng thứ " + (num + 1));
       dealership.getCustomerById(num);
     }
 

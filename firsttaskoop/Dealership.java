@@ -3,6 +3,7 @@ package firsttaskoop;
 import java.util.ArrayList;
 
 public class Dealership {
+
   private String nameDealer;
   private ArrayList<Vehicle> inventory = new ArrayList<>();
   private ArrayList<Customer> customers = new ArrayList<>();
@@ -11,14 +12,15 @@ public class Dealership {
     this.nameDealer = nameDealer;
   }
 
-  public void addInventory(Vehicle vehicle) {
+  public void addVehicle(Vehicle vehicle) {
     inventory.add(vehicle);
-    System.out.println("Đã thêm " + vehicle.getNameModel() + " vào kho. " +"Số lượng: " + vehicle.getQuantity() );
+    System.out.println(
+        "Đã thêm " + vehicle.getNameModel() + " vào kho. " + "Số lượng: " + vehicle.getQuantity());
   }
 
   public void addCustomer(Customer customer) {
     customers.add(customer);
-    System.out.println("Đã thêm khách hàng " +customer.getNameCustomer() + " vào danh sách!");
+    System.out.println("Đã thêm khách hàng " + customer.getName() + " vào danh sách!");
   }
 
   public Vehicle getVehicleById(int id) {
@@ -34,7 +36,7 @@ public class Dealership {
   public void showInventory() {
     for (int i = 0; i < inventory.size(); i++) {
       System.out.println("Số lượng các loại xe hiện có:");
-      System.out.println("Xe số " + i+1 +" có thông tin cơ bản như sau:");
+      System.out.println("Xe số " + (i + 1) + " có thông tin cơ bản như sau:");
       inventory.get(i).giveBasicInformation();
     }
   }

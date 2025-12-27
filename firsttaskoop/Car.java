@@ -16,7 +16,7 @@ public class Car extends Vehicle {
   public Car(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
       String origin,
       int seatNumber, String typeOfField, int capacity, String bodyType, int quantity) {
-    super(nameModel, manufacturer, birthYear, originalPrice, origin, CAR_IMPORT_TAX,quantity);
+    super(nameModel, manufacturer, birthYear, originalPrice, origin, CAR_IMPORT_TAX, quantity);
     this.seatNumber = seatNumber;
     this.typeOfField = typeOfField;
     this.capacity = capacity;

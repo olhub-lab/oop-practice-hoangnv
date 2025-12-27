@@ -13,7 +13,8 @@ public class MotorBike extends Vehicle {
 
   public MotorBike(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
       String origin, int capacity, int power, String typeOfMotorBike, int quantity) {
-    super(nameModel, manufacturer, birthYear, originalPrice, origin, MOTORBIKE_IMPORT_TAX,quantity);
+    super(nameModel, manufacturer, birthYear, originalPrice, origin, MOTORBIKE_IMPORT_TAX,
+        quantity);
     this.capacity = capacity;
     this.typeOfMotorBike = typeOfMotorBike;
     this.power = power;
