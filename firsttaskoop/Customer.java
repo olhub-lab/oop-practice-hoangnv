@@ -2,6 +2,7 @@ package firsttaskoop;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Customer {
 
@@ -10,8 +11,14 @@ public class Customer {
   private String address;
   private BigDecimal accountBalance;
   private LoyaltyLevel level;
-  private ArrayList<Vehicle> listOfVehicles;
+  private List<Vehicle> vehicles;
   private int ownerVehicle;
+
+  private static final int MIN_VEHICLE_SILVER = 3;
+  private static final int MAX_VEHICLE_SILVER = 5;
+  private static final int MIN_VEHICLE_GOLD = 6;
+  private static final int MAX_VEHICLE_GOLD = 10;
+  private static final int MIN_VEHICLE_PLATINUM = 11;
 
   public Customer(String name, String phoneNumber, String address) {
     this.name = name;
@@ -19,17 +26,17 @@ public class Customer {
     this.address = address;
     this.accountBalance = BigDecimal.ZERO;
     this.level = updateLoyaltyLevel();
-    this.listOfVehicles = new ArrayList<>();
+    this.vehicles = new ArrayList<>();
     this.ownerVehicle = 0;
   }
 
-  public Customer(String nameCustomer, String phoneNumber, String address,
+  public Customer(String name, String phoneNumber, String address,
       BigDecimal accountBalance) {
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.accountBalance = accountBalance;
-    this.listOfVehicles = new ArrayList<>();
+    this.vehicles = new ArrayList<>();
     this.level = updateLoyaltyLevel();
     this.ownerVehicle = 0;
   }
@@ -43,7 +50,7 @@ public class Customer {
 
     if (accountBalance.compareTo(price) >= 0) {
       accountBalance = accountBalance.subtract(price);
-      listOfVehicles.add(newVehicle);
+      vehicles.add(newVehicle);
       ownerVehicle++;
       this.level = updateLoyaltyLevel();
       return true;
@@ -55,7 +62,7 @@ public class Customer {
   }
 
   public void deposit(BigDecimal amount) {
-    if (accountBalance.compareTo(amount) >= 0) {
+    if (amount.compareTo(BigDecimal.ZERO) > 0) {
       accountBalance = accountBalance.add(amount);
       System.out.println("Giao dịch thành công: Đã nạp " + amount + " VNĐ");
       System.out.println("Số dư hiện tại của khách hàng " + name + " là " + accountBalance);
@@ -65,11 +72,11 @@ public class Customer {
   }
 
   private LoyaltyLevel updateLoyaltyLevel() {
-    if (ownerVehicle <= 5 && ownerVehicle > 2) {
+    if (ownerVehicle <= MAX_VEHICLE_SILVER && ownerVehicle >= MIN_VEHICLE_SILVER) {
       return LoyaltyLevel.SILVER;
-    } else if (ownerVehicle <= 10 && ownerVehicle > 5) {
+    } else if (ownerVehicle <= MAX_VEHICLE_GOLD && ownerVehicle > MIN_VEHICLE_GOLD) {
       return LoyaltyLevel.GOLD;
-    } else if (ownerVehicle > 10) {
+    } else if (ownerVehicle >= MIN_VEHICLE_PLATINUM) {
       return LoyaltyLevel.PLATINUM;
     }
     return LoyaltyLevel.REGULAR;
@@ -83,9 +90,9 @@ public class Customer {
     System.out.printf("Số dư: %f VNĐ\n", accountBalance);
     System.out.println("Cấp độ thân thiết: " + level);
     System.out.println("Số phương tiện đã sở hữu " + ownerVehicle);
-    if (!listOfVehicles.isEmpty()) {
+    if (!vehicles.isEmpty()) {
       System.out.println("Danh sách xe:");
-      for (Vehicle vehicle : listOfVehicles) {
+      for (Vehicle vehicle : vehicles) {
         System.out.println(" - " + vehicle.getNameModel());
       }
     }
