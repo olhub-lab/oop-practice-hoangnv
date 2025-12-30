@@ -2,7 +2,7 @@ package firsttaskoop;
 
 import java.math.BigDecimal;
 
-public abstract class Vehicles {
+public abstract class Vehicle {
 
   private static final BigDecimal VAT_RATE = new BigDecimal("0.1");
   private static final String ORIGIN = "Trong nuoc";
@@ -12,16 +12,30 @@ public abstract class Vehicles {
   protected BigDecimal originalPrice;
   protected String origin;
   protected BigDecimal importTax;
+  protected int quantity;
 
-  public Vehicles(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
+  public Vehicle(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
       String origin,
-      BigDecimal importTax) {
+      BigDecimal importTax, int quantity) {
     this.nameModel = nameModel;
     this.manufacturer = manufacturer;
     this.birthYear = birthYear;
     this.originalPrice = originalPrice;
     this.origin = origin;
     this.importTax = importTax;
+    this.quantity = quantity;
+  }
+
+  public int getQuantity() {
+    return quantity;
+  }
+
+  public void setQuantity(int quantity) {
+    this.quantity = quantity;
+  }
+
+  public String getNameModel() {
+    return nameModel;
   }
 
   public BigDecimal getImportTax() {
@@ -47,6 +61,7 @@ public abstract class Vehicles {
     System.out.printf("Hãng %s\n", manufacturer);
     System.out.printf("Năm sản xuất %d\n", birthYear);
     System.out.printf("Xuất xứ: %s\n", origin);
+    System.out.printf("Số lượng tồn kho: %d\n", quantity);
   }
 
   abstract void giveApplicableTax();
