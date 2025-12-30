@@ -117,7 +117,7 @@ public class Main {
         sc.nextLine();
         switch (select) {
           case 1:
-            dealership.showInventory();
+            dealership.showvehicles();
             System.out.println("Chọn xe số mấy?");
             int choice = sc.nextInt();
             Vehicle choosenVehicle = dealership.getVehicleById(choice - 1);

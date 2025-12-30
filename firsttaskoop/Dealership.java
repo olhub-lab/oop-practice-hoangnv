@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class Dealership {
 
-  private String nameDealer;
-  private ArrayList<Vehicle> inventory = new ArrayList<>();
+  private String name;
+  private ArrayList<Vehicle> vehicles = new ArrayList<>();
   private ArrayList<Customer> customers = new ArrayList<>();
 
-  public Dealership(String nameDealer) {
-    this.nameDealer = nameDealer;
+  public Dealership(String name) {
+    this.name = name;
   }
 
   public void addVehicle(Vehicle vehicle) {
-    inventory.add(vehicle);
+    vehicles.add(vehicle);
     System.out.println(
         "Đã thêm " + vehicle.getNameModel() + " vào kho. " + "Số lượng: " + vehicle.getQuantity());
   }
@@ -24,7 +24,12 @@ public class Dealership {
   }
 
   public Vehicle getVehicleById(int id) {
-    return inventory.get(id);
+    if (id >= 0 || id < vehicles.size()) {
+      return vehicles.get(id);
+    } else {
+      System.out.println("Lỗi: Không tìm thấy xe có id " + id);
+      return null;
+    }
   }
 
   public void getCustomerById(int id) {
@@ -33,11 +38,11 @@ public class Dealership {
 
   }
 
-  public void showInventory() {
-    for (int i = 0; i < inventory.size(); i++) {
-      System.out.println("Số lượng các loại xe hiện có:");
+  public void showvehicles() {
+    System.out.println("Số lượng các loại xe hiện có:");
+    for (int i = 0; i < vehicles.size(); i++) {
       System.out.println("Xe số " + (i + 1) + " có thông tin cơ bản như sau:");
-      inventory.get(i).giveBasicInformation();
+      vehicles.get(i).giveBasicInformation();
     }
   }
 
