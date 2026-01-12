@@ -15,8 +15,7 @@ public abstract class Vehicle {
   protected int quantity;
 
   public Vehicle(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
-      String origin,
-      BigDecimal importTax, int quantity) {
+      String origin, BigDecimal importTax, int quantity) {
     this.nameModel = nameModel;
     this.manufacturer = manufacturer;
     this.birthYear = birthYear;
@@ -28,10 +27,6 @@ public abstract class Vehicle {
 
   public int getQuantity() {
     return quantity;
-  }
-
-  public void setQuantity(int quantity) {
-    this.quantity = quantity;
   }
 
   public String getNameModel() {
@@ -46,6 +41,10 @@ public abstract class Vehicle {
     }
   }
 
+  public String getName() {
+    return nameModel;
+  }
+
   public abstract BigDecimal getExciseTax();
 
   public BigDecimal calculatePrice() {
@@ -56,12 +55,17 @@ public abstract class Vehicle {
     return priceBeforeVAT.add(taxVAT);
   }
 
+  public void updateQuantity(int n) {
+    this.quantity = this.quantity - n;
+  }
+
   public void giveBasicInformation() {
     System.out.printf("Tên: %s\n", nameModel);
     System.out.printf("Hãng %s\n", manufacturer);
     System.out.printf("Năm sản xuất %d\n", birthYear);
     System.out.printf("Xuất xứ: %s\n", origin);
     System.out.printf("Số lượng tồn kho: %d\n", quantity);
+    System.out.println("Giá lăn bánh: " + calculatePrice());
   }
 
   abstract void giveApplicableTax();

@@ -6,19 +6,20 @@ import java.util.List;
 
 public class Customer {
 
-  private String name;
-  private String phoneNumber;
-  private String address;
-  private BigDecimal accountBalance;
-  private LoyaltyLevel level;
-  private List<Vehicle> vehicles;
-  private int ownerVehicle;
-
   private static final int MIN_VEHICLE_SILVER = 3;
   private static final int MAX_VEHICLE_SILVER = 5;
   private static final int MIN_VEHICLE_GOLD = 6;
   private static final int MAX_VEHICLE_GOLD = 10;
   private static final int MIN_VEHICLE_PLATINUM = 11;
+  private static final BigDecimal DISCOUNT_FOR_GOLD = new BigDecimal("0.05");
+  private static final BigDecimal DISCOUNT_FOR_PLATINUM = new BigDecimal("0.10");
+  private String name;
+  private String phoneNumber;
+  private String address;
+  private BigDecimal accountBalance;
+  private LoyaltyLevel level;
+  private List<Vehicle> purschaseHistory;
+  private int ownerVehicle;
 
   public Customer(String name, String phoneNumber, String address) {
     this.name = name;
@@ -26,7 +27,7 @@ public class Customer {
     this.address = address;
     this.accountBalance = BigDecimal.ZERO;
     this.level = updateLoyaltyLevel();
-    this.vehicles = new ArrayList<>();
+    this.purschaseHistory = new ArrayList<>();
     this.ownerVehicle = 0;
   }
 
@@ -36,7 +37,7 @@ public class Customer {
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.accountBalance = accountBalance;
-    this.vehicles = new ArrayList<>();
+    this.purschaseHistory = new ArrayList<>();
     this.level = updateLoyaltyLevel();
     this.ownerVehicle = 0;
   }
@@ -45,29 +46,38 @@ public class Customer {
     return name;
   }
 
-  public boolean buyVehicle(Vehicle newVehicle) {
-    BigDecimal price = newVehicle.calculatePrice();
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-    if (accountBalance.compareTo(price) >= 0) {
-      accountBalance = accountBalance.subtract(price);
-      vehicles.add(newVehicle);
-      ownerVehicle++;
-      this.level = updateLoyaltyLevel();
-      return true;
-    } else {
-      System.out.println(
-          "Số dư trong tài khoản chưa đủ!! Vui lòng nạp thêm để tiếp tục giao dịch!!!");
-      return false;
+  public BigDecimal getAccountBalance() {
+    return accountBalance;
+  }
+
+  public void pay(BigDecimal amount) {
+    if (checkingBalance(amount)) {
+      this.accountBalance = this.accountBalance.subtract(amount);
     }
   }
 
-  public void deposit(BigDecimal amount) {
-    if (amount.compareTo(BigDecimal.ZERO) > 0) {
-      accountBalance = accountBalance.add(amount);
-      System.out.println("Giao dịch thành công: Đã nạp " + amount + " VNĐ");
-      System.out.println("Số dư hiện tại của khách hàng " + name + " là " + accountBalance);
-    } else {
-      System.out.println("Lỗi: Số tiền nạp phải lớn hơn 0.");
+  public void addVehicle(Vehicle vehicle) {
+    this.purschaseHistory.add(vehicle);
+    this.ownerVehicle++;
+    this.level = updateLoyaltyLevel();
+  }
+
+  public boolean checkingBalance(BigDecimal amount) {
+    return accountBalance.compareTo(amount) >= 0;
+  }
+
+  public BigDecimal getDiscount() {
+    switch (this.level) {
+      case GOLD:
+        return DISCOUNT_FOR_GOLD;
+      case PLATINUM:
+        return DISCOUNT_FOR_PLATINUM;
+      default:
+        return BigDecimal.ZERO;
     }
   }
 
@@ -82,19 +92,7 @@ public class Customer {
     return LoyaltyLevel.REGULAR;
   }
 
-
-  public void displayCustomer() {
-    System.out.println("Khách hàng: " + name);
-    System.out.println("Số điện thoại: " + phoneNumber);
-    System.out.println("Địa chỉ: " + address);
-    System.out.printf("Số dư: %f VNĐ\n", accountBalance);
-    System.out.println("Cấp độ thân thiết: " + level);
-    System.out.println("Số phương tiện đã sở hữu " + ownerVehicle);
-    if (!vehicles.isEmpty()) {
-      System.out.println("Danh sách xe:");
-      for (Vehicle vehicle : vehicles) {
-        System.out.println(" - " + vehicle.getNameModel());
-      }
-    }
+  public LoyaltyLevel getLoyaltyLevel() {
+    return this.level;
   }
 }
