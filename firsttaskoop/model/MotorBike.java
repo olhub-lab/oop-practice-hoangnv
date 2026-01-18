@@ -1,6 +1,7 @@
-package firsttaskoop;
+package firsttaskoop.model;
 
 import java.math.BigDecimal;
+import firsttaskoop.enums.Origin;
 
 public class MotorBike extends Vehicle {
 
@@ -12,7 +13,7 @@ public class MotorBike extends Vehicle {
   private int power;
 
   public MotorBike(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
-      String origin, int capacity, int power, String typeOfMotorBike, int quantity) {
+      Origin origin, int capacity, int power, String typeOfMotorBike, int quantity) {
     super(nameModel, manufacturer, birthYear, originalPrice, origin, MOTORBIKE_IMPORT_TAX,
         quantity);
     this.capacity = capacity;
@@ -28,19 +29,5 @@ public class MotorBike extends Vehicle {
     } else {
       return basePrice.multiply(HIGH_MOTORBIKE_CAPACITY_TAX);
     }
-  }
-
-  @Override
-  public void giveApplicableTax() {
-    System.out.printf("Thuế nhập khẩu: %.2f || Thuế tiêu thụ đặc biệt: %.2f",
-        super.getImportTax(), getExciseTax());
-  }
-
-  @Override
-  public void giveBasicInformation() {
-    super.giveBasicInformation();
-    System.out.printf("Dung tích xi-lanh: %d", capacity);
-    System.out.printf("Loại xe: %s\n", typeOfMotorBike);
-    System.out.printf("Công suất: %d\n", power);
   }
 }

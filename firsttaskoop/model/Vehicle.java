@@ -1,21 +1,26 @@
-package firsttaskoop;
+package firsttaskoop.model;
 
 import java.math.BigDecimal;
+import firsttaskoop.enums.Origin;
 
 public abstract class Vehicle {
 
   private static final BigDecimal VAT_RATE = new BigDecimal("0.1");
-  private static final String ORIGIN = "Trong nuoc";
   protected String nameModel;
   protected String manufacturer;
   protected int birthYear;
   protected BigDecimal originalPrice;
-  protected String origin;
+  protected Origin origin;
   protected BigDecimal importTax;
   protected int quantity;
 
-  public Vehicle(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
-      String origin, BigDecimal importTax, int quantity) {
+  public Vehicle(String nameModel,
+      String manufacturer,
+      int birthYear,
+      BigDecimal originalPrice,
+      Origin origin,
+      BigDecimal importTax,
+      int quantity) {
     this.nameModel = nameModel;
     this.manufacturer = manufacturer;
     this.birthYear = birthYear;
@@ -34,7 +39,7 @@ public abstract class Vehicle {
   }
 
   public BigDecimal getImportTax() {
-    if (origin.equalsIgnoreCase(ORIGIN)) {
+    if (this.origin == Origin.DOMESTIC ) {
       return BigDecimal.ZERO;
     } else {
       return originalPrice.multiply(importTax);
@@ -58,15 +63,4 @@ public abstract class Vehicle {
   public void updateQuantity(int n) {
     this.quantity = this.quantity - n;
   }
-
-  public void giveBasicInformation() {
-    System.out.printf("Tên: %s\n", nameModel);
-    System.out.printf("Hãng %s\n", manufacturer);
-    System.out.printf("Năm sản xuất %d\n", birthYear);
-    System.out.printf("Xuất xứ: %s\n", origin);
-    System.out.printf("Số lượng tồn kho: %d\n", quantity);
-    System.out.println("Giá lăn bánh: " + calculatePrice());
-  }
-
-  abstract void giveApplicableTax();
 }

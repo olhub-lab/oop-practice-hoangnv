@@ -1,8 +1,9 @@
-package firsttaskoop;
+package firsttaskoop.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import firsttaskoop.enums.LoyaltyLevel;
 
 public class Customer {
 
@@ -18,7 +19,7 @@ public class Customer {
   private String address;
   private BigDecimal accountBalance;
   private LoyaltyLevel level;
-  private List<Vehicle> purschaseHistory;
+  private List<Vehicle> purschasedHistory;
   private int ownerVehicle;
 
   public Customer(String name, String phoneNumber, String address) {
@@ -26,8 +27,8 @@ public class Customer {
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.accountBalance = BigDecimal.ZERO;
-    this.level = updateLoyaltyLevel();
-    this.purschaseHistory = new ArrayList<>();
+    this.level = LoyaltyLevel.REGULAR;
+    this.purschasedHistory = new ArrayList<>();
     this.ownerVehicle = 0;
   }
 
@@ -37,8 +38,8 @@ public class Customer {
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.accountBalance = accountBalance;
-    this.purschaseHistory = new ArrayList<>();
-    this.level = updateLoyaltyLevel();
+    this.purschasedHistory = new ArrayList<>();
+    this.level = LoyaltyLevel.REGULAR;
     this.ownerVehicle = 0;
   }
 
@@ -61,9 +62,9 @@ public class Customer {
   }
 
   public void addVehicle(Vehicle vehicle) {
-    this.purschaseHistory.add(vehicle);
+    this.purschasedHistory.add(vehicle);
     this.ownerVehicle++;
-    this.level = updateLoyaltyLevel();
+    updateLoyaltyLevel();
   }
 
   public boolean checkingBalance(BigDecimal amount) {
@@ -71,25 +72,17 @@ public class Customer {
   }
 
   public BigDecimal getDiscount() {
-    switch (this.level) {
-      case GOLD:
-        return DISCOUNT_FOR_GOLD;
-      case PLATINUM:
-        return DISCOUNT_FOR_PLATINUM;
-      default:
-        return BigDecimal.ZERO;
-    }
+    return level.getDiscountRate();
   }
 
-  private LoyaltyLevel updateLoyaltyLevel() {
+  private void updateLoyaltyLevel() {
     if (ownerVehicle <= MAX_VEHICLE_SILVER && ownerVehicle >= MIN_VEHICLE_SILVER) {
-      return LoyaltyLevel.SILVER;
+      this.level = LoyaltyLevel.SILVER;
     } else if (ownerVehicle <= MAX_VEHICLE_GOLD && ownerVehicle > MIN_VEHICLE_GOLD) {
-      return LoyaltyLevel.GOLD;
+      this.level = LoyaltyLevel.GOLD;
     } else if (ownerVehicle >= MIN_VEHICLE_PLATINUM) {
-      return LoyaltyLevel.PLATINUM;
+      this.level = LoyaltyLevel.PLATINUM;
     }
-    return LoyaltyLevel.REGULAR;
   }
 
   public LoyaltyLevel getLoyaltyLevel() {

@@ -1,6 +1,7 @@
-package firsttaskoop;
+package firsttaskoop.model;
 
 import java.math.BigDecimal;
+import firsttaskoop.enums.Origin;
 
 public class Bike extends Vehicle {
 
@@ -9,7 +10,7 @@ public class Bike extends Vehicle {
   private String frameMaterial;
 
   public Bike(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
-      String origin,
+      Origin origin,
       String bikeType, String frameMaterial, int quantity) {
     super(nameModel, manufacturer, birthYear, originalPrice, origin, BIKE_IMPORT_TAX, quantity);
     this.bikeType = bikeType;
@@ -21,16 +22,4 @@ public class Bike extends Vehicle {
     return BigDecimal.ZERO;
   }
 
-  @Override
-  public void giveApplicableTax() {
-    System.out.printf("Thuế nhập khẩu: %.2f || Thuế tiêu thụ đặc biệt: %.2f",
-        super.getImportTax(), getExciseTax());
-  }
-
-  @Override
-  public void giveBasicInformation() {
-    super.giveBasicInformation();
-    System.out.printf("Loại xe: %s\n", bikeType);
-    System.out.printf("Chất liệu khung: %s\n", frameMaterial);
-  }
 }

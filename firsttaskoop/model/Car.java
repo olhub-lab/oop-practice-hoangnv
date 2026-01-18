@@ -1,6 +1,7 @@
-package firsttaskoop;
+package firsttaskoop.model;
 
 import java.math.BigDecimal;
+import firsttaskoop.enums.Origin;
 
 public class Car extends Vehicle {
 
@@ -13,9 +14,16 @@ public class Car extends Vehicle {
   private int capacity;
   private String bodyType;
 
-  public Car(String nameModel, String manufacturer, int birthYear, BigDecimal originalPrice,
-      String origin,
-      int seatNumber, String typeOfField, int capacity, String bodyType, int quantity) {
+  public Car(String nameModel,
+      String manufacturer,
+      int birthYear,
+      BigDecimal originalPrice,
+      Origin origin,
+      int seatNumber,
+      String typeOfField,
+      int capacity,
+      String bodyType,
+      int quantity) {
     super(nameModel, manufacturer, birthYear, originalPrice, origin, CAR_IMPORT_TAX, quantity);
     this.seatNumber = seatNumber;
     this.typeOfField = typeOfField;
@@ -33,18 +41,4 @@ public class Car extends Vehicle {
     }
   }
 
-  @Override
-  public void giveApplicableTax() {
-    System.out.printf("Thuế nhập khẩu: %.2f || Thuế tiêu thụ đặc biệt: %.2f",
-        super.getImportTax(), getExciseTax());
-  }
-
-  @Override
-  public void giveBasicInformation() {
-    super.giveBasicInformation();
-    System.out.printf("Số chỗ ngồi: %d\n", seatNumber);
-    System.out.printf("Loại nhiên liệu: %s\n", typeOfField);
-    System.out.printf("Dung tích động cơ: %d\n", capacity);
-    System.out.printf("Loại thân xe: %s\n", bodyType);
-  }
 }
