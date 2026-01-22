@@ -16,7 +16,6 @@ public class Bike extends Vehicle {
     this.bikeType = bikeType;
     this.frameMaterial = frameMaterial;
   }
-
   @Override
   public BigDecimal getExciseTax() {
     return BigDecimal.ZERO;

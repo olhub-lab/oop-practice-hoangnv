@@ -39,15 +39,11 @@ public abstract class Vehicle {
   }
 
   public BigDecimal getImportTax() {
-    if (this.origin == Origin.DOMESTIC ) {
+    if (this.origin == Origin.DOMESTIC) {
       return BigDecimal.ZERO;
     } else {
       return originalPrice.multiply(importTax);
     }
-  }
-
-  public String getName() {
-    return nameModel;
   }
 
   public abstract BigDecimal getExciseTax();

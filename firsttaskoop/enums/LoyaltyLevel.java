@@ -16,5 +16,4 @@ public enum LoyaltyLevel {
   public BigDecimal getDiscountRate() {
     return discountRate;
   }
-
 }

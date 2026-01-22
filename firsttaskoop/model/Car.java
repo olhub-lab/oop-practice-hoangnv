@@ -30,7 +30,6 @@ public class Car extends Vehicle {
     this.capacity = capacity;
     this.bodyType = bodyType;
   }
-
   @Override
   public BigDecimal getExciseTax() {
     BigDecimal basePrice = originalPrice.add(super.getImportTax());

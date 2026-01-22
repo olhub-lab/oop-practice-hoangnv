@@ -84,8 +84,4 @@ public class Customer {
       this.level = LoyaltyLevel.PLATINUM;
     }
   }
-
-  public LoyaltyLevel getLoyaltyLevel() {
-    return this.level;
-  }
 }

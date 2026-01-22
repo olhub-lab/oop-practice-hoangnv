@@ -38,7 +38,9 @@ public class Dealership {
   }
 
   public boolean processActionBuy(Vehicle v, Customer c) {
-    if (v == null || v.getQuantity() <= 0) return false;
+    if (v == null || v.getQuantity() <= 0) {
+      return false;
+    }
 
     BigDecimal finalPrice = v.calculatePrice().multiply(BigDecimal.ONE.subtract(c.getDiscount()));
 
