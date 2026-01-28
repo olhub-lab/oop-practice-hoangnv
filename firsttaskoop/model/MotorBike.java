@@ -25,8 +25,10 @@ public class MotorBike extends Vehicle {
   public BigDecimal getExciseTax() {
     BigDecimal basePrice = originalPrice.add(super.getImportTax());
     if (capacity < MOTORBIKE_CAPACITY) {
+
       return BigDecimal.ZERO;
     } else {
+
       return basePrice.multiply(HIGH_MOTORBIKE_CAPACITY_TAX);
     }
   }

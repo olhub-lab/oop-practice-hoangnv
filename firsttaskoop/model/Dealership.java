@@ -15,6 +15,7 @@ public class Dealership {
   }
 
   public String getName() {
+
     return name;
   }
 
@@ -31,35 +32,41 @@ public class Dealership {
   public boolean checkingExistCustomer(Customer otherCustomer) {
     for (Customer customer : customers) {
       if (customer.getPhoneNumber().equals(otherCustomer.getPhoneNumber())) {
+
         return true;
       }
     }
+
     return false;
   }
 
-  public boolean processActionBuy(Vehicle v, Customer c) {
-    if (v == null || v.getQuantity() <= 0) {
+  public boolean processActionBuy(Vehicle vehicle, Customer customer) {
+    if (vehicle == null || vehicle.getQuantity() <= 0) {
+
       return false;
     }
 
-    BigDecimal finalPrice = v.calculatePrice().multiply(BigDecimal.ONE.subtract(c.getDiscount()));
+    BigDecimal finalPrice = vehicle.calculatePrice().multiply(BigDecimal.ONE.subtract(customer.getDiscount()));
 
-    if (c.checkingBalance(finalPrice)) {
-      c.pay(finalPrice);
-      c.addVehicle(v);
-      v.updateQuantity(1);
-      this.addCustomer(c);
+    if (customer.checkingBalance(finalPrice)) {
+      customer.pay(finalPrice);
+      customer.addVehicle(vehicle);
+      vehicle.updateQuantity(1);
+      this.addCustomer(customer);
+
       return true;
     }
+
     return false;
   }
 
   public Vehicle findVehicle(String modelName) {
-    for (Vehicle v : vehicles) {
-      if (v.getNameModel().equalsIgnoreCase(modelName.trim())) {
-        return v;
+    for (Vehicle vehicle : vehicles) {
+      if (vehicle.getNameModel().equalsIgnoreCase(modelName.trim())) {
+        return vehicle;
       }
     }
+
     return null;
   }
 
@@ -67,8 +74,8 @@ public class Dealership {
     return vehicles;
   }
 
-  public ArrayList<Vehicle> getAlternatives(Vehicle targetVehicle) {
-    ArrayList<Vehicle> alternatives = new ArrayList<>();
+  public List<Vehicle> getAlternatives(Vehicle targetVehicle) {
+    List<Vehicle> alternatives = new ArrayList<>();
     for (Vehicle v : vehicles) {
       if (v.getClass().equals(targetVehicle.getClass()) &&
           !v.getNameModel().equalsIgnoreCase(targetVehicle.getNameModel()) &&
@@ -76,6 +83,7 @@ public class Dealership {
         alternatives.add(v);
       }
     }
+
     return alternatives;
   }
 }

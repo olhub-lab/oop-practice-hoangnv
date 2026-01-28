@@ -40,8 +40,10 @@ public abstract class Vehicle {
 
   public BigDecimal getImportTax() {
     if (this.origin == Origin.DOMESTIC) {
+
       return BigDecimal.ZERO;
     } else {
+
       return originalPrice.multiply(importTax);
     }
   }
@@ -53,6 +55,7 @@ public abstract class Vehicle {
     BigDecimal exciseTax = getExciseTax();
     BigDecimal priceBeforeVAT = originalPrice.add(importTax).add(exciseTax);
     BigDecimal taxVAT = priceBeforeVAT.multiply(VAT_RATE);
+
     return priceBeforeVAT.add(taxVAT);
   }
 

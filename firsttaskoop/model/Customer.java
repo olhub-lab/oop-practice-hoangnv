@@ -19,7 +19,7 @@ public class Customer {
   private String address;
   private BigDecimal accountBalance;
   private LoyaltyLevel level;
-  private List<Vehicle> purschasedHistory;
+  private List<Vehicle> purchasedHistory;
   private int ownerVehicle;
 
   public Customer(String name, String phoneNumber, String address) {
@@ -28,7 +28,7 @@ public class Customer {
     this.address = address;
     this.accountBalance = BigDecimal.ZERO;
     this.level = LoyaltyLevel.REGULAR;
-    this.purschasedHistory = new ArrayList<>();
+    this.purchasedHistory = new ArrayList<>();
     this.ownerVehicle = 0;
   }
 
@@ -38,20 +38,23 @@ public class Customer {
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.accountBalance = accountBalance;
-    this.purschasedHistory = new ArrayList<>();
+    this.purchasedHistory = new ArrayList<>();
     this.level = LoyaltyLevel.REGULAR;
     this.ownerVehicle = 0;
   }
 
   public String getName() {
+
     return name;
   }
 
   public String getPhoneNumber() {
+
     return phoneNumber;
   }
 
   public BigDecimal getAccountBalance() {
+
     return accountBalance;
   }
 
@@ -62,16 +65,18 @@ public class Customer {
   }
 
   public void addVehicle(Vehicle vehicle) {
-    this.purschasedHistory.add(vehicle);
+    this.purchasedHistory.add(vehicle);
     this.ownerVehicle++;
     updateLoyaltyLevel();
   }
 
   public boolean checkingBalance(BigDecimal amount) {
+
     return accountBalance.compareTo(amount) >= 0;
   }
 
   public BigDecimal getDiscount() {
+
     return level.getDiscountRate();
   }
 

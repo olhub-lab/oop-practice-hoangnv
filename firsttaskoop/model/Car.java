@@ -34,8 +34,10 @@ public class Car extends Vehicle {
   public BigDecimal getExciseTax() {
     BigDecimal basePrice = originalPrice.add(super.getImportTax());
     if (capacity < CAR_CAPACITY) {
+
       return basePrice.multiply(LOW_CAPACITY_TAX);
     } else {
+
       return basePrice.multiply(HIGH_CAPACITY_TAX);
     }
   }

@@ -30,13 +30,13 @@ public class DealershipController {
           addVehicleLogic();
           break;
         case 2:
-          addCustomerLogic();
-          break;
-        case 3:
           sellLogic();
           break;
-        case 4:
+        case 3:
           showDealerInventoryLogic();
+          break;
+        default:
+          System.out.println(">> Vui lòng nhập đúng số thứ tự!!");
           break;
       }
     }
@@ -80,6 +80,8 @@ public class DealershipController {
     Customer customer = view.selectCustomer(customerSystem);
 
     Dealership selectedDealer = view.selectDealership(dealerships);
+
+    view.listVehicles(selectedDealer.getInventory());
 
     String model = view.askNotEmpty("Tên xe mua");
     Vehicle vehicle = selectedDealer.findVehicle(model);

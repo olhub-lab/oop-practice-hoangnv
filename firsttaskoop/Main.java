@@ -1,7 +1,6 @@
 package firsttaskoop;
 
 import firsttaskoop.controller.DealershipController;
-import firsttaskoop.model.Dealership;
 import firsttaskoop.view.DealershipView;
 
 public class Main {
