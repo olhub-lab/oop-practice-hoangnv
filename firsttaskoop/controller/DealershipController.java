@@ -56,11 +56,6 @@ public class DealershipController {
   }
 
   private void showDealerInventoryLogic() {
-    if (dealershipService.getAllDealerships().isEmpty()) {
-      view.showMessage("Hệ thống chưa có đại lý nào!!");
-      return;
-    }
-
     Dealership selectedDealer = view.selectDealership(dealershipService.getAllDealerships());
     if (selectedDealer != null) {
       view.listVehicles(selectedDealer.getInventory());
@@ -68,15 +63,6 @@ public class DealershipController {
   }
 
   private void sellLogic() {
-    if (dealershipService.getAllCustomers().isEmpty()) {
-      view.showMessage("Chưa có khách hàng!");
-      return;
-    }
-    if (dealershipService.getAllDealerships().isEmpty()) {
-      view.showMessage("Chưa có đại lý nào!!");
-      return;
-    }
-
     Customer customer = view.selectCustomer(dealershipService.getAllCustomers());
     Dealership selectedDealer = view.selectDealership(dealershipService.getAllDealerships());
     view.listVehicles(selectedDealer.getInventory());
