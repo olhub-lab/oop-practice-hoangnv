@@ -1,20 +1,20 @@
 package firsttaskoop.controller;
 
+import firsttaskoop.service.DealershipService;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import firsttaskoop.model.*;
 import firsttaskoop.view.DealershipView;
 import firsttaskoop.enums.*;
+import java.util.List;
 
 public class DealershipController {
 
-  private List<Dealership> dealerships = new ArrayList<>();
-  private List<Customer> customerSystem = new ArrayList<>();
   private DealershipView view;
+  private DealershipService dealershipService;
 
-  public DealershipController(DealershipView view) {
+  public DealershipController(DealershipView view, DealershipService dealershipService) {
     this.view = view;
+    this.dealershipService = dealershipService;
   }
 
   public void run() {
@@ -46,7 +46,7 @@ public class DealershipController {
     int numDealers = view.askInt("Nhập số lượng đại lý muốn tạo?!");
     for (int i = 0; i < numDealers; i++) {
       String name = view.askNotEmpty("Tên đại lý thứ " + (i + 1));
-      dealerships.add(new Dealership(name));
+      dealershipService.addDealership(name);
     }
 
     int numCustomers = view.askInt("Nhập số lượng khách hàng muốn đăng ký");
@@ -56,54 +56,52 @@ public class DealershipController {
   }
 
   private void showDealerInventoryLogic() {
-    if (dealerships.isEmpty()) {
+    if (dealershipService.getAllDealerships().isEmpty()) {
       view.showMessage("Hệ thống chưa có đại lý nào!!");
       return;
     }
 
-    Dealership selectedDealer = view.selectDealership(dealerships);
+    Dealership selectedDealer = view.selectDealership(dealershipService.getAllDealerships());
     if (selectedDealer != null) {
       view.listVehicles(selectedDealer.getInventory());
     }
   }
 
   private void sellLogic() {
-    if (customerSystem.isEmpty()) {
+    if (dealershipService.getAllCustomers().isEmpty()) {
       view.showMessage("Chưa có khách hàng!");
       return;
     }
-    if (dealerships.isEmpty()) {
+    if (dealershipService.getAllDealerships().isEmpty()) {
       view.showMessage("Chưa có đại lý nào!!");
       return;
     }
 
-    Customer customer = view.selectCustomer(customerSystem);
-
-    Dealership selectedDealer = view.selectDealership(dealerships);
-
+    Customer customer = view.selectCustomer(dealershipService.getAllCustomers());
+    Dealership selectedDealer = view.selectDealership(dealershipService.getAllDealerships());
     view.listVehicles(selectedDealer.getInventory());
 
     String model = view.askNotEmpty("Tên xe mua");
-    Vehicle vehicle = selectedDealer.findVehicle(model);
-    boolean success = selectedDealer.processActionBuy(vehicle, customer);
+    boolean success = dealershipService.sellVehicle(customer,model,selectedDealer);
 
     if (success) {
       view.showMessage("MUA XE THÀNH CÔNG! Số dư: " + customer.getAccountBalance());
     } else {
       view.showMessage("Giao dịch thất bại (Hết hàng hoặc thiếu tiền)");
-      if (vehicle != null) {
-        view.showSuggestions(selectedDealer.getAlternatives(vehicle));
-      }
+
+      List<Vehicle> suggestedVehicles = dealershipService.getSuggestedVehicles(selectedDealer, model);
+
+      view.showSuggestions(suggestedVehicles);
     }
   }
 
   private void addVehicleLogic() {
-    if (dealerships.isEmpty()) {
+    if (dealershipService.getAllDealerships().isEmpty()) {
       view.showMessage("Phải có đại lý mới được nhập xe!!");
       return;
     }
 
-    Dealership targetDealer = view.selectDealership(dealerships);
+    Dealership targetDealer = view.selectDealership(dealershipService.getAllDealerships());
     if (targetDealer == null) {
       return;
     }
@@ -125,23 +123,22 @@ public class DealershipController {
         String fuel = view.askNotEmpty("Loại nhiên liệu");
         int cap = view.askInt("Dung tích xi lanh");
         String body = view.askNotEmpty("Kiểu dáng (Sedan/SUV...)");
-        targetDealer.addVehicle(
-            new Car(name, manufacturer, year, price, origin, seats, fuel, cap, body, qty));
+        dealershipService.addCarToDealer(targetDealer,
+            name, manufacturer, year, price, origin,
+            seats, fuel, cap, body, qty);
         break;
       }
       case 2: {
         int cap = view.askInt("Phân khối (cc)");
         int power = view.askInt("Công suất");
         String bikeType = view.askNotEmpty("Loại xe máy (Sport/Naked...)");
-        targetDealer.addVehicle(
-            new MotorBike(name, manufacturer, year, price, origin, cap, power, bikeType, qty));
+        dealershipService.addMotorbikeToDealer(targetDealer, name, manufacturer, year, price, origin, cap, power, bikeType, qty);
         break;
       }
       case 3: {
         String bikeType = view.askNotEmpty("Loại xe đạp");
         String material = view.askNotEmpty("Chất liệu khung");
-        targetDealer.addVehicle(
-            new Bike(name, manufacturer, year, price, origin, bikeType, material, qty));
+        dealershipService.addBikeToDealer(targetDealer, name, manufacturer, year, price, origin, bikeType, material, qty);
         break;
       }
       default:
@@ -157,7 +154,7 @@ public class DealershipController {
     String address = view.askNotEmpty("Địa chỉ");
     BigDecimal balance = view.askBigDecimal("Số dư nạp vào");
 
-    customerSystem.add(new Customer(name, phone, address, balance));
+    dealershipService.addCustomer(name, phone, address, balance);
     view.showMessage("Đăng ký khách hàng thành công!");
   }
 }

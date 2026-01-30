@@ -79,7 +79,9 @@ public class Dealership {
     for (Vehicle v : vehicles) {
       if (v.getClass().equals(targetVehicle.getClass()) &&
           !v.getNameModel().equalsIgnoreCase(targetVehicle.getNameModel()) &&
-          v.getQuantity() > 0) {
+          v.getQuantity() > 0 &&
+          v.calculatePrice().compareTo(targetVehicle.calculatePrice()) < 0) {
+
         alternatives.add(v);
       }
     }

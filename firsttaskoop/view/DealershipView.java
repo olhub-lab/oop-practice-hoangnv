@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.util.List;
 import firsttaskoop.enums.*;
 import firsttaskoop.model.*;
+import firsttaskoop.exception.*;
 
 public class DealershipView {
 
@@ -27,53 +28,38 @@ public class DealershipView {
   }
 
   public int askInt(String prompt) {
-    while (true) {
-      try {
-        System.out.print(prompt + ": ");
+    System.out.println(prompt+ ": ");
+    try {
+      int value = Integer.parseInt(sc.nextLine());
+      NegativeValueException.check(value, prompt);
 
-        return Integer.parseInt(sc.nextLine());
-      } catch (Exception e) {
+      return value;
+    } catch (NumberFormatException e) {
 
-        System.out.println(">> Lỗi: Vui lòng nhập số nguyên dương hợp lệ!!");
-      }
+      throw new InvalidInputException("Lỗi: " + prompt + " phải là một số nguyên!");
     }
   }
 
   public BigDecimal askBigDecimal(String prompt) {
-    while (true) {
-      try {
-        System.out.print(prompt + ": ");
+    System.out.print(prompt + ": ");
+    try {
+      BigDecimal value = new BigDecimal(sc.nextLine());
+      NegativeValueException.check(value, prompt);
 
-        String input = sc.nextLine();
-        BigDecimal value = new BigDecimal(input);
-        if (value.compareTo(BigDecimal.ZERO) < 0) {
+      return value;
+    } catch (NumberFormatException e) {
 
-          System.out.println(">> Lỗi: giá trị không được âm!!!");
-
-          continue;
-        }
-
-        return value;
-      } catch (Exception e) {
-
-        System.out.println(">> Lỗi: Vui lòng nhập số tiền hợp lệ!!");
-      }
+      throw new InvalidInputException("Lỗi: '" + prompt + "' không phải định dạng tiền hợp lệ!");
     }
   }
 
   public String askNotEmpty(String prompt) {
-    while (true) {
-      System.out.print(prompt + ": ");
+    System.out.print(prompt + ": ");
+    String input = sc.nextLine().trim();
 
-      String input = sc.nextLine();
-      if (input.isEmpty()) {
+    InvalidInputException.checkEmpty(input, prompt);
 
-        System.out.println(">> Lỗi: Thông tin này không được để trống!!!");
-      } else {
-
-        return input;
-      }
-    }
+    return input;
   }
 
   public Origin askOrigin() {
@@ -122,43 +108,35 @@ public class DealershipView {
     }
   }
 
-
   public Dealership selectDealership(List<Dealership> list) {
     if (list.isEmpty()) {
-      System.out.println(">> Hiện không có đại lý nào!!!");
-
-      return null;
+      throw new EntityNotFoundException("danh sách đại lý");
     }
     System.out.println("\n--- Danh sách đại lý ---");
     for (int i = 0; i < list.size(); i++) {
       System.out.printf("%d. %s\n", i + 1, list.get(i).getName());
     }
     int choice = askInt("Chọn đại lý (Nhập số thứ tự)");
-    if (choice > 0 && choice <= list.size()) {
-
-      return list.get(choice - 1);
+    if (choice <= 0 || choice > list.size()) {
+      throw new InvalidInputException("STT đại lý không tồn tại!");
     }
-
-    return null;
+    return list.get(choice - 1);
   }
 
   public Customer selectCustomer(List<Customer> list) {
     if (list.isEmpty()) {
-      System.out.println(">> Hiện không có khách hàng nào!!");
-
-      return null;
+      throw new EntityNotFoundException("danh sách khách hàng");
     }
+
     System.out.println("\n--- Danh sách khách hàng ---");
     for (int i = 0; i < list.size(); i++) {
       System.out.printf("%d. %s\n", i + 1, list.get(i).getName());
     }
 
-    int choiceCustomer = askInt("Chọn khách hàng (Nhập số thứ tự)");
-    if (choiceCustomer > 0 && choiceCustomer <= list.size()) {
-
-      return list.get(choiceCustomer - 1);
+    int choice = askInt("Chọn STT khách hàng");
+    if (choice <= 0 || choice > list.size()) {
+      throw new InvalidInputException("STT khách hàng không tồn tại!");
     }
-
-    return null;
+    return list.get(choice - 1);
   }
 }
