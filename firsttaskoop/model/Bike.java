@@ -18,6 +18,7 @@ public class Bike extends Vehicle {
   }
   @Override
   public BigDecimal getExciseTax() {
+
     return BigDecimal.ZERO;
   }
 

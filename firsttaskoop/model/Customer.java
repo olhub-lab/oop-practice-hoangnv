@@ -12,8 +12,6 @@ public class Customer {
   private static final int MIN_VEHICLE_GOLD = 6;
   private static final int MAX_VEHICLE_GOLD = 10;
   private static final int MIN_VEHICLE_PLATINUM = 11;
-  private static final BigDecimal DISCOUNT_FOR_GOLD = new BigDecimal("0.05");
-  private static final BigDecimal DISCOUNT_FOR_PLATINUM = new BigDecimal("0.10");
   private String name;
   private String phoneNumber;
   private String address;
@@ -83,7 +81,7 @@ public class Customer {
   private void updateLoyaltyLevel() {
     if (ownerVehicle <= MAX_VEHICLE_SILVER && ownerVehicle >= MIN_VEHICLE_SILVER) {
       this.level = LoyaltyLevel.SILVER;
-    } else if (ownerVehicle <= MAX_VEHICLE_GOLD && ownerVehicle > MIN_VEHICLE_GOLD) {
+    } else if (ownerVehicle <= MAX_VEHICLE_GOLD && ownerVehicle >= MIN_VEHICLE_GOLD) {
       this.level = LoyaltyLevel.GOLD;
     } else if (ownerVehicle >= MIN_VEHICLE_PLATINUM) {
       this.level = LoyaltyLevel.PLATINUM;

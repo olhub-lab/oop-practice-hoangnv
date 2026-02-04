@@ -36,10 +36,9 @@ public class Car extends Vehicle {
     if (capacity < CAR_CAPACITY) {
 
       return basePrice.multiply(LOW_CAPACITY_TAX);
-    } else {
-
-      return basePrice.multiply(HIGH_CAPACITY_TAX);
     }
+
+    return basePrice.multiply(HIGH_CAPACITY_TAX);
   }
 
 }

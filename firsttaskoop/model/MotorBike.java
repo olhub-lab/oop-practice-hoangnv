@@ -27,9 +27,8 @@ public class MotorBike extends Vehicle {
     if (capacity < MOTORBIKE_CAPACITY) {
 
       return BigDecimal.ZERO;
-    } else {
-
-      return basePrice.multiply(HIGH_MOTORBIKE_CAPACITY_TAX);
     }
+
+    return basePrice.multiply(HIGH_MOTORBIKE_CAPACITY_TAX);
   }
 }

@@ -7,8 +7,8 @@ import java.util.List;
 public class Dealership {
 
   private String name;
-  private ArrayList<Vehicle> vehicles = new ArrayList<>();
-  private ArrayList<Customer> customers = new ArrayList<>();
+  private List<Vehicle> vehicles = new ArrayList<>();
+  private List<Customer> customers = new ArrayList<>();
 
   public Dealership(String name) {
     this.name = name;

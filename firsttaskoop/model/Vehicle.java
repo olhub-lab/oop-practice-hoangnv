@@ -1,5 +1,6 @@
 package firsttaskoop.model;
 
+import firsttaskoop.exception.NegativeValueException;
 import java.math.BigDecimal;
 import firsttaskoop.enums.Origin;
 
@@ -42,10 +43,9 @@ public abstract class Vehicle {
     if (this.origin == Origin.DOMESTIC) {
 
       return BigDecimal.ZERO;
-    } else {
-
-      return originalPrice.multiply(importTax);
     }
+
+    return originalPrice.multiply(importTax);
   }
 
   public abstract BigDecimal getExciseTax();
@@ -60,6 +60,14 @@ public abstract class Vehicle {
   }
 
   public void updateQuantity(int n) {
+    if (n < 1) {
+      throw new NegativeValueException("Số lượng nhập kho không thể là số âm");
+    }
+
+    if (this.quantity < n) {
+      throw new NegativeValueException("Kho hàng trong kho không đủ để thực hiện giao dịch");
+    }
+
     this.quantity = this.quantity - n;
   }
 }

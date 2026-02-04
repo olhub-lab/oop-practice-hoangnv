@@ -12,11 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DealershipService {
+
   private List<Dealership> dealerships = new ArrayList<>();
   private List<Customer> customerSystem = new ArrayList<>();
 
-  public List<Dealership> getAllDealerships() {return dealerships;}
-  public List<Customer> getAllCustomers() {return customerSystem;}
+  public List<Dealership> getAllDealerships() {
+    return dealerships;
+  }
+
+  public List<Customer> getAllCustomers() {
+    return customerSystem;
+  }
 
   public void addDealership(String name) {
     dealerships.add(new Dealership(name));
@@ -26,7 +32,7 @@ public class DealershipService {
     customerSystem.add(new Customer(name, phone, address, balance));
   }
 
-  public boolean sellVehicle(Customer customer, String model,Dealership dealership) {
+  public boolean sellVehicle(Customer customer, String model, Dealership dealership) {
     Vehicle vehicle = dealership.findVehicle(model);
     if (vehicle == null) {
       return false;
@@ -43,15 +49,15 @@ public class DealershipService {
   }
 
   public void addCarToDealer(Dealership dealer, String name, String manufacturer, int year,
-      BigDecimal price, Origin origin, int seats, String fuel,
-      int cap, String body, int qty) {
+      BigDecimal price, Origin origin, int seats, String fuel, int cap, String body, int qty) {
     Car car = new Car(name, manufacturer, year, price, origin, seats, fuel, cap, body, qty);
     dealer.addVehicle(car);
   }
 
   public void addMotorbikeToDealer(Dealership dealer, String name, String manufacturer, int year,
-      BigDecimal price, Origin origin, int cap, int power, String bikeType,int qty) {
-    MotorBike motorBike = new MotorBike(name, manufacturer, year, price, origin, cap, power, bikeType, qty);
+      BigDecimal price, Origin origin, int cap, int power, String bikeType, int qty) {
+    MotorBike motorBike = new MotorBike(name, manufacturer, year, price, origin, cap, power,
+        bikeType, qty);
     dealer.addVehicle(motorBike);
   }
 
