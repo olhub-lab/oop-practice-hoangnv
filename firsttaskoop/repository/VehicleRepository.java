@@ -45,20 +45,14 @@ public class VehicleRepository {
     List<Vehicle> list = new ArrayList<>();
     String sql = BASE_SELECT_SQL + "WHERE v.dealership_id = ?";
 
-    Connection conn = null;
-    try {
-      conn = DBContext.getInstance().getConnection();
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, dealerId);
-        try (ResultSet rs = ps.executeQuery()) {
-          while (rs.next()) {
-            list.add(mapRowToVehicle(rs));
-          }
+    try (Connection conn = DBContext.getConnection();) {
+      PreparedStatement ps = conn.prepareStatement(sql);
+      ps.setInt(1, dealerId);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          list.add(mapRowToVehicle(rs));
         }
-      }
-    } finally {
-      if (conn != null) {
-        DBContext.getInstance().releaseConnection(conn);
       }
     }
     return list;
@@ -76,7 +70,7 @@ public class VehicleRepository {
         "LEFT JOIN bike b ON v.id = b.vehicle_id " +
         "WHERE v.dealership_id = ? AND v.vehicle_type = ? AND v.id != ? AND v.base_price < ? AND v.quantity > 0";
 
-    try (Connection conn = DBContext.getInstance().getConnection();
+    try (Connection conn = DBContext.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)) {
       ps.setInt(1, dealerId);
       ps.setString(2, type);

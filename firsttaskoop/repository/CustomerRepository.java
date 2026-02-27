@@ -66,32 +66,23 @@ public class CustomerRepository {
     List<Customer> list = new ArrayList<>();
     String sql = "SELECT * FROM customer";
 
-    Connection conn = null;
-    try {
-      conn = DBContext.getInstance().getConnection();
-      try (Statement st = conn.createStatement();
-          ResultSet rs = st.executeQuery(sql)) {
+    try (Connection conn = DBContext.getConnection();
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(sql)) {
 
-        while (rs.next()) {
-          int id = rs.getInt("id");
-          String name = rs.getString("name");
-          String phone = rs.getString("phone_number");
-          String address = rs.getString("address");
-          BigDecimal balance = rs.getBigDecimal("account_balance");
-
-          LoyaltyLevel level = LoyaltyLevel.valueOf(rs.getString("loyalty_level"));
-          int ownerVehicle = rs.getInt("owner_vehicle");
-
-          Customer c = new Customer(id, name, phone, address, balance, level, ownerVehicle);
-          list.add(c);
-        }
+      while (rs.next()) {
+        list.add(new Customer(
+            rs.getInt("id"),
+            rs.getString("name"),
+            rs.getString("phone_number"),
+            rs.getString("address"),
+            rs.getBigDecimal("account_balance"),
+            LoyaltyLevel.valueOf(rs.getString("loyalty_level")),
+            rs.getInt("owner_vehicle")
+        ));
       }
     } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      if (conn != null) {
-        DBContext.getInstance().releaseConnection(conn);
-      }
     }
     return list;
   }

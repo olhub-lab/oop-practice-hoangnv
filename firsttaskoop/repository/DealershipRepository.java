@@ -10,7 +10,7 @@ public class DealershipRepository {
   public List<Dealership> findAll() {
     List<Dealership> list = new ArrayList<>();
     String sql = "SELECT * FROM dealership";
-    try (Connection conn = DBContext.getInstance().getConnection();
+    try (Connection conn = DBContext.getConnection();
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(sql)) {
       while (rs.next()) {
@@ -26,7 +26,7 @@ public class DealershipRepository {
 
   public void save(Dealership dealer) {
     String sql = "INSERT INTO dealership (name) VALUES (?)";
-    try (Connection conn = DBContext.getInstance().getConnection();
+    try (Connection conn = DBContext.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)) {
       ps.setString(1, dealer.getName());
       ps.executeUpdate();

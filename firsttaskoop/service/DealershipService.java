@@ -2,12 +2,7 @@ package firsttaskoop.service;
 
 import firsttaskoop.enums.Origin;
 import firsttaskoop.exception.InvalidInputException;
-import firsttaskoop.model.Bike;
-import firsttaskoop.model.Car;
-import firsttaskoop.model.Customer;
-import firsttaskoop.model.Dealership;
-import firsttaskoop.model.MotorBike;
-import firsttaskoop.model.Vehicle;
+import firsttaskoop.model.*;
 import firsttaskoop.repository.CustomerRepository;
 import firsttaskoop.repository.DBContext;
 import firsttaskoop.repository.DealershipRepository;
@@ -37,89 +32,65 @@ public class DealershipService {
   }
 
   public void addCustomer(String name, String phone, String address, BigDecimal balance) {
-    Connection conn = null;
-    try {
-      conn = DBContext.getInstance().getConnection();
-
-      conn.setAutoCommit(false);
-
-      Customer c = new Customer(name, phone, address, balance);
-
-      customerRepository.save(conn, c);
-
-      conn.commit();
-      System.out.println("Thêm khách hàng thành công với ID: " + c.getId());
-
+    try (Connection conn = DBContext.getConnection()) {
+      try {
+        conn.setAutoCommit(false);
+        Customer c = new Customer(name, phone, address, balance);
+        customerRepository.save(conn, c);
+        conn.commit();
+        System.out.println("Thêm khách hàng thành công với ID: " + c.getId());
+      } catch (Exception e) {
+        conn.rollback();
+        throw e;
+      }
     } catch (Exception e) {
-      if (conn != null) {
-        try {
-          conn.rollback();
-        } catch (SQLException ex) {
-          ex.printStackTrace();
-        }
-      }
       e.printStackTrace();
-    } finally {
-      if (conn != null) {
-        DBContext.getInstance().releaseConnection(conn);
-      }
     }
-    ;
   }
 
   public boolean sellVehicle(int customerId, String modelName, int dealerId) {
-    Connection conn = null;
-    try {
-      conn = DBContext.getInstance().getConnection();
-      conn.setAutoCommit(false);
+    try (Connection conn = DBContext.getConnection()) {
+      try {
+        conn.setAutoCommit(false);
 
-      Vehicle vehicle = vehicleRepository.findByNameAndDealer(conn, modelName, dealerId);
-      if (vehicle == null || vehicle.getQuantity() <= 0) {
-        return false;
-      }
-
-      Customer customer = customerRepository.findById(conn, customerId);
-      if (customer == null) {
-        return false;
-      }
-
-      BigDecimal discountRate = customer.getDiscount();
-      BigDecimal priceAfterTax = vehicle.calculatePrice();
-      BigDecimal finalPrice = priceAfterTax.multiply(BigDecimal.ONE.subtract(discountRate));
-
-      if (customer.checkingBalance(finalPrice)) {
-        customer.setAccountBalance(customer.getAccountBalance().subtract(finalPrice));
-        customer.setOwnerVehicle(customer.getOwnerVehicle() + 1);
-        customer.updateLoyaltyLevel();
-
-        customerRepository.updateCustomerAfterSale(conn, customer);
-        vehicleRepository.updateQuantity(conn, vehicle.getId(), -1);
-
-        conn.commit();
-        return true;
-      }
-      return false;
-    } catch (Exception e) {
-      if (conn != null) {
-        try {
-          conn.rollback();
-        } catch (SQLException ex) {
-          ex.printStackTrace();
+        Vehicle vehicle = vehicleRepository.findByNameAndDealer(conn, modelName, dealerId);
+        if (vehicle == null || vehicle.getQuantity() <= 0) {
+          return false;
         }
+
+        Customer customer = customerRepository.findById(conn, customerId);
+        if (customer == null) {
+          return false;
+        }
+
+        BigDecimal finalPrice = vehicle.calculatePrice()
+            .multiply(BigDecimal.ONE.subtract(customer.getDiscount()));
+
+        if (customer.checkingBalance(finalPrice)) {
+          customer.setAccountBalance(customer.getAccountBalance().subtract(finalPrice));
+          customer.setOwnerVehicle(customer.getOwnerVehicle() + 1);
+          customer.updateLoyaltyLevel();
+
+          customerRepository.updateCustomerAfterSale(conn, customer);
+          vehicleRepository.updateQuantity(conn, vehicle.getId(), -1);
+
+          conn.commit();
+          return true;
+        }
+        return false;
+      } catch (Exception e) {
+        conn.rollback();
+        e.printStackTrace();
+        return false;
       }
+    } catch (SQLException e) {
       e.printStackTrace();
       return false;
-    } finally {
-      if (conn != null) {
-        DBContext.getInstance().releaseConnection(conn);
-      }
     }
   }
 
   public List<Vehicle> getSuggestedVehicles(int dealerId, String modelName) {
-    Connection conn = null;
-    try {
-      conn = DBContext.getInstance().getConnection();
+    try (Connection conn = DBContext.getConnection()) {
       Vehicle target = vehicleRepository.findByNameAndDealer(conn, modelName, dealerId);
       if (target == null) {
         return vehicleRepository.findByDealerId(dealerId);
@@ -129,17 +100,13 @@ public class DealershipService {
     } catch (SQLException e) {
       e.printStackTrace();
       return new ArrayList<>();
-    } finally {
-      if (conn != null) {
-        DBContext.getInstance().releaseConnection(conn);
-      }
     }
   }
 
   public void addCarToDealer(int dealerId, String name, String manufacturer, int year,
       BigDecimal price, Origin origin, int seats, String fuel, int cap, String body, int qty) {
-    Car car = new Car(name, manufacturer, year, price, origin, seats, fuel, cap, body, qty);
-    saveVehicleHelper(car, dealerId);
+    saveVehicleHelper(new Car(name, manufacturer, year, price, origin, seats, fuel, cap, body, qty),
+        dealerId);
   }
 
   public void addMotorbikeToDealer(int dealerId, String name, String manufacturer, int year,
@@ -156,30 +123,20 @@ public class DealershipService {
   }
 
   private void saveVehicleHelper(Vehicle v, int dealerId) {
-    Connection conn = null;
-    try {
-      conn = DBContext.getInstance().getConnection();
-      conn.setAutoCommit(false);
-
-      if (v.getOriginalPrice().compareTo(BigDecimal.ZERO) < 0) {
-        throw new InvalidInputException("Giá xe không được âm!");
-      }
-
-      vehicleRepository.save(conn, v, dealerId);
-      conn.commit();
-    } catch (Exception e) {
-      if (conn != null) {
-        try {
-          conn.rollback();
-        } catch (SQLException ex) {
-          ex.printStackTrace();
+    try (Connection conn = DBContext.getConnection()) {
+      try {
+        conn.setAutoCommit(false);
+        if (v.getOriginalPrice().compareTo(BigDecimal.ZERO) < 0) {
+          throw new InvalidInputException("Giá xe không được âm!");
         }
+        vehicleRepository.save(conn, v, dealerId);
+        conn.commit();
+      } catch (Exception e) {
+        conn.rollback();
+        throw new RuntimeException("Lỗi khi lưu xe: " + e.getMessage());
       }
-      throw new RuntimeException("Lỗi hệ thống khi lưu xe: " + e.getMessage());
-    } finally {
-      if (conn != null) {
-        DBContext.getInstance().releaseConnection(conn);
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 }
