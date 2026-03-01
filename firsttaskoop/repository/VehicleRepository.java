@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.List;
 
 public interface VehicleRepository {
+
   Vehicle findByNameAndDealer(Connection conn, String modelName, int dealerId)
       throws SQLException;
 
