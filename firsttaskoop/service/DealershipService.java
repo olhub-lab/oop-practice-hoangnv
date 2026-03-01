@@ -4,7 +4,7 @@ import firsttaskoop.enums.Origin;
 import firsttaskoop.exception.InvalidInputException;
 import firsttaskoop.model.*;
 import firsttaskoop.repository.CustomerRepository;
-import firsttaskoop.repository.DBContext;
+import firsttaskoop.repository.DBConnector;
 import firsttaskoop.repository.DealershipRepository;
 import firsttaskoop.repository.VehicleRepository;
 import java.math.BigDecimal;
@@ -15,9 +15,15 @@ import java.util.List;
 
 public class DealershipService {
 
-  private DealershipRepository dealershipRepository = new DealershipRepository();
-  private VehicleRepository vehicleRepository = new VehicleRepository();
-  private CustomerRepository customerRepository = new CustomerRepository();
+  private final DealershipRepository dealershipRepository;
+  private final VehicleRepository vehicleRepository;
+  private final  CustomerRepository customerRepository;
+
+  public DealershipService(DealershipRepository dealershipRepository, VehicleRepository vehicleRepository, CustomerRepository customerRepository)  {
+    this.dealershipRepository = dealershipRepository;
+    this.vehicleRepository = vehicleRepository;
+    this.customerRepository = customerRepository;
+  }
 
   public List<Dealership> getAllDealerships() {
     return dealershipRepository.findAll();
@@ -32,7 +38,7 @@ public class DealershipService {
   }
 
   public void addCustomer(String name, String phone, String address, BigDecimal balance) {
-    try (Connection conn = DBContext.getConnection()) {
+    try (Connection conn = DBConnector.getConnection()) {
       try {
         conn.setAutoCommit(false);
         Customer c = new Customer(name, phone, address, balance);
@@ -49,7 +55,7 @@ public class DealershipService {
   }
 
   public boolean sellVehicle(int customerId, String modelName, int dealerId) {
-    try (Connection conn = DBContext.getConnection()) {
+    try (Connection conn = DBConnector.getConnection()) {
       try {
         conn.setAutoCommit(false);
 
@@ -90,7 +96,7 @@ public class DealershipService {
   }
 
   public List<Vehicle> getSuggestedVehicles(int dealerId, String modelName) {
-    try (Connection conn = DBContext.getConnection()) {
+    try (Connection conn = DBConnector.getConnection()) {
       Vehicle target = vehicleRepository.findByNameAndDealer(conn, modelName, dealerId);
       if (target == null) {
         return vehicleRepository.findByDealerId(dealerId);
@@ -123,7 +129,7 @@ public class DealershipService {
   }
 
   private void saveVehicleHelper(Vehicle v, int dealerId) {
-    try (Connection conn = DBContext.getConnection()) {
+    try (Connection conn = DBConnector.getConnection()) {
       try {
         conn.setAutoCommit(false);
         if (v.getOriginalPrice().compareTo(BigDecimal.ZERO) < 0) {

@@ -4,18 +4,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBContext {
+public class DBConnector {
 
   private static final String URL = "jdbc:mysql://localhost:3306/vehicle_management";
   private static final String USER = "root";
   private static final String PASS = "145hoang";
 
-  public static Connection getConnection() throws SQLException {
+  static {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
-      return DriverManager.getConnection(URL, USER, PASS);
+      System.out.println("Driver đã được load thành công !!!");
     } catch (ClassNotFoundException e) {
-      throw new SQLException("Không tìm thấy Driver JDBC!");
+      System.err.println("Không tìm thấy Driver MySQL!");
+      e.printStackTrace();
     }
+  }
+
+  public static Connection getConnection() throws SQLException {
+    return DriverManager.getConnection(URL, USER, PASS);
   }
 }
