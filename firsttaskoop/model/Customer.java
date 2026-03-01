@@ -12,60 +12,96 @@ public class Customer {
   private static final int MIN_VEHICLE_GOLD = 6;
   private static final int MAX_VEHICLE_GOLD = 10;
   private static final int MIN_VEHICLE_PLATINUM = 11;
+
+  private int id;
   private String name;
   private String phoneNumber;
   private String address;
   private BigDecimal accountBalance;
   private LoyaltyLevel level;
-  private List<Vehicle> purchasedHistory;
   private int ownerVehicle;
 
-  public Customer(String name, String phoneNumber, String address) {
+  public Customer(int id,
+      String name,
+      String phoneNumber,
+      String address,
+      BigDecimal accountBalance,
+      LoyaltyLevel level,
+      int ownerVehicle) {
+    this.id = id;
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.address = address;
-    this.accountBalance = BigDecimal.ZERO;
-    this.level = LoyaltyLevel.REGULAR;
-    this.purchasedHistory = new ArrayList<>();
+    this.accountBalance = accountBalance;
+    this.level = level;
     this.ownerVehicle = 0;
   }
 
-  public Customer(String name, String phoneNumber, String address,
+  public Customer(String name,
+      String phoneNumber,
+      String address,
       BigDecimal accountBalance) {
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.accountBalance = accountBalance;
-    this.purchasedHistory = new ArrayList<>();
     this.level = LoyaltyLevel.REGULAR;
-    this.ownerVehicle = 0;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public String getName() {
-
     return name;
   }
 
-  public String getPhoneNumber() {
+  public void setName(String name) {
+    this.name = name;
+  }
 
+  public String getPhoneNumber() {
     return phoneNumber;
   }
 
-  public BigDecimal getAccountBalance() {
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
 
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public BigDecimal getAccountBalance() {
     return accountBalance;
   }
 
-  public void pay(BigDecimal amount) {
-    if (checkingBalance(amount)) {
-      this.accountBalance = this.accountBalance.subtract(amount);
-    }
+  public void setAccountBalance(BigDecimal accountBalance) {
+    this.accountBalance = accountBalance;
   }
 
-  public void addVehicle(Vehicle vehicle) {
-    this.purchasedHistory.add(vehicle);
-    this.ownerVehicle++;
-    updateLoyaltyLevel();
+  public LoyaltyLevel getLevel() {
+    return level;
+  }
+
+  public void setLevel(LoyaltyLevel level) {
+    this.level = level;
+  }
+
+  public int getOwnerVehicle() {
+    return ownerVehicle;
+  }
+
+  public void setOwnerVehicle(int ownerVehicle) {
+    this.ownerVehicle = ownerVehicle;
   }
 
   public boolean checkingBalance(BigDecimal amount) {
@@ -78,7 +114,7 @@ public class Customer {
     return level.getDiscountRate();
   }
 
-  private void updateLoyaltyLevel() {
+  public void updateLoyaltyLevel() {
     if (ownerVehicle <= MAX_VEHICLE_SILVER && ownerVehicle >= MIN_VEHICLE_SILVER) {
       this.level = LoyaltyLevel.SILVER;
     } else if (ownerVehicle <= MAX_VEHICLE_GOLD && ownerVehicle >= MIN_VEHICLE_GOLD) {

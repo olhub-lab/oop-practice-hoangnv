@@ -1,69 +1,148 @@
 package firsttaskoop.service;
 
 import firsttaskoop.enums.Origin;
-import firsttaskoop.model.Bike;
-import firsttaskoop.model.Car;
-import firsttaskoop.model.Customer;
-import firsttaskoop.model.Dealership;
-import firsttaskoop.model.MotorBike;
-import firsttaskoop.model.Vehicle;
+import firsttaskoop.exception.InvalidInputException;
+import firsttaskoop.model.*;
+import firsttaskoop.repository.CustomerRepository;
+import firsttaskoop.repository.DBConnector;
+import firsttaskoop.repository.DealershipRepository;
+import firsttaskoop.repository.VehicleRepository;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DealershipService {
 
-  private List<Dealership> dealerships = new ArrayList<>();
-  private List<Customer> customerSystem = new ArrayList<>();
+  private final DealershipRepository dealershipRepository;
+  private final VehicleRepository vehicleRepository;
+  private final  CustomerRepository customerRepository;
+
+  public DealershipService(DealershipRepository dealershipRepository, VehicleRepository vehicleRepository, CustomerRepository customerRepository)  {
+    this.dealershipRepository = dealershipRepository;
+    this.vehicleRepository = vehicleRepository;
+    this.customerRepository = customerRepository;
+  }
 
   public List<Dealership> getAllDealerships() {
-    return dealerships;
+    return dealershipRepository.findAll();
   }
 
   public List<Customer> getAllCustomers() {
-    return customerSystem;
+    return customerRepository.findAll();
   }
 
   public void addDealership(String name) {
-    dealerships.add(new Dealership(name));
+    dealershipRepository.save(new Dealership(name));
   }
 
   public void addCustomer(String name, String phone, String address, BigDecimal balance) {
-    customerSystem.add(new Customer(name, phone, address, balance));
+    try (Connection conn = DBConnector.getConnection()) {
+      try {
+        conn.setAutoCommit(false);
+        Customer c = new Customer(name, phone, address, balance);
+        customerRepository.save(conn, c);
+        conn.commit();
+        System.out.println("Thêm khách hàng thành công với ID: " + c.getId());
+      } catch (Exception e) {
+        conn.rollback();
+        throw e;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
-  public boolean sellVehicle(Customer customer, String model, Dealership dealership) {
-    Vehicle vehicle = dealership.findVehicle(model);
-    if (vehicle == null) {
+  public boolean sellVehicle(int customerId, String modelName, int dealerId) {
+    try (Connection conn = DBConnector.getConnection()) {
+      try {
+        conn.setAutoCommit(false);
+
+        Vehicle vehicle = vehicleRepository.findByNameAndDealer(conn, modelName, dealerId);
+        if (vehicle == null || vehicle.getQuantity() <= 0) {
+          return false;
+        }
+
+        Customer customer = customerRepository.findById(conn, customerId);
+        if (customer == null) {
+          return false;
+        }
+
+        BigDecimal finalPrice = vehicle.calculatePrice()
+            .multiply(BigDecimal.ONE.subtract(customer.getDiscount()));
+
+        if (customer.checkingBalance(finalPrice)) {
+          customer.setAccountBalance(customer.getAccountBalance().subtract(finalPrice));
+          customer.setOwnerVehicle(customer.getOwnerVehicle() + 1);
+          customer.updateLoyaltyLevel();
+
+          customerRepository.updateCustomerAfterSale(conn, customer);
+          vehicleRepository.updateQuantity(conn, vehicle.getId(), -1);
+
+          conn.commit();
+          return true;
+        }
+        return false;
+      } catch (Exception e) {
+        conn.rollback();
+        e.printStackTrace();
+        return false;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
       return false;
     }
-    return dealership.processActionBuy(vehicle, customer);
   }
 
-  public List<Vehicle> getSuggestedVehicles(Dealership dealer, String modelName) {
-    Vehicle vehicle = dealer.findVehicle(modelName);
-    if (vehicle == null) {
-      return dealer.getInventory();
+  public List<Vehicle> getSuggestedVehicles(int dealerId, String modelName) {
+    try (Connection conn = DBConnector.getConnection()) {
+      Vehicle target = vehicleRepository.findByNameAndDealer(conn, modelName, dealerId);
+      if (target == null) {
+        return vehicleRepository.findByDealerId(dealerId);
+      }
+      return vehicleRepository.findAlternatives(dealerId, target.getId(),
+          target.getClass().getSimpleName(), target.calculatePrice());
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return new ArrayList<>();
     }
-    return dealer.getAlternatives(vehicle);
   }
 
-  public void addCarToDealer(Dealership dealer, String name, String manufacturer, int year,
+  public void addCarToDealer(int dealerId, String name, String manufacturer, int year,
       BigDecimal price, Origin origin, int seats, String fuel, int cap, String body, int qty) {
-    Car car = new Car(name, manufacturer, year, price, origin, seats, fuel, cap, body, qty);
-    dealer.addVehicle(car);
+    saveVehicleHelper(new Car(name, manufacturer, year, price, origin, seats, fuel, cap, body, qty),
+        dealerId);
   }
 
-  public void addMotorbikeToDealer(Dealership dealer, String name, String manufacturer, int year,
+  public void addMotorbikeToDealer(int dealerId, String name, String manufacturer, int year,
       BigDecimal price, Origin origin, int cap, int power, String bikeType, int qty) {
     MotorBike motorBike = new MotorBike(name, manufacturer, year, price, origin, cap, power,
         bikeType, qty);
-    dealer.addVehicle(motorBike);
+    saveVehicleHelper(motorBike, dealerId);
   }
 
-  public void addBikeToDealer(Dealership dealer, String name, String manufacturer, int year,
+  public void addBikeToDealer(int dealerId, String name, String manufacturer, int year,
       BigDecimal price, Origin origin, String bikeType, String materials, int qty) {
     Bike bike = new Bike(name, manufacturer, year, price, origin, bikeType, materials, qty);
-    dealer.addVehicle(bike);
+    saveVehicleHelper(bike, dealerId);
+  }
+
+  private void saveVehicleHelper(Vehicle v, int dealerId) {
+    try (Connection conn = DBConnector.getConnection()) {
+      try {
+        conn.setAutoCommit(false);
+        if (v.getOriginalPrice().compareTo(BigDecimal.ZERO) < 0) {
+          throw new InvalidInputException("Giá xe không được âm!");
+        }
+        vehicleRepository.save(conn, v, dealerId);
+        conn.commit();
+      } catch (Exception e) {
+        conn.rollback();
+        throw new RuntimeException("Lỗi khi lưu xe: " + e.getMessage());
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }
