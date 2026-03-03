@@ -38,7 +38,7 @@ public class DealershipService {
   }
 
   public void addCustomer(String name, String phone, String address, BigDecimal balance) {
-    try (Connection conn = DBConnector.getConnection()) {
+    try (Connection conn = DBConnector.getInstance().getConnection()) {
       try {
         conn.setAutoCommit(false);
         Customer c = new Customer(name, phone, address, balance);
@@ -55,7 +55,7 @@ public class DealershipService {
   }
 
   public boolean sellVehicle(int customerId, String modelName, int dealerId) {
-    try (Connection conn = DBConnector.getConnection()) {
+    try (Connection conn = DBConnector.getInstance().getConnection()) {
       try {
         conn.setAutoCommit(false);
 
@@ -96,7 +96,7 @@ public class DealershipService {
   }
 
   public List<Vehicle> getSuggestedVehicles(int dealerId, String modelName) {
-    try (Connection conn = DBConnector.getConnection()) {
+    try (Connection conn = DBConnector.getInstance().getConnection()) {
       Vehicle target = vehicleRepository.findByNameAndDealer(conn, modelName, dealerId);
       if (target == null) {
         return vehicleRepository.findByDealerId(dealerId);
@@ -129,7 +129,7 @@ public class DealershipService {
   }
 
   private void saveVehicleHelper(Vehicle v, int dealerId) {
-    try (Connection conn = DBConnector.getConnection()) {
+    try (Connection conn = DBConnector.getInstance().getConnection()) {
       try {
         conn.setAutoCommit(false);
         if (v.getOriginalPrice().compareTo(BigDecimal.ZERO) < 0) {
