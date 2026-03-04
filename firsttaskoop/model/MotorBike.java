@@ -21,30 +21,6 @@ public class MotorBike extends Vehicle {
     this.power = power;
   }
 
-  public int getCapacity() {
-    return capacity;
-  }
-
-  public void setCapacity(int capacity) {
-    this.capacity = capacity;
-  }
-
-  public String getTypeOfMotorBike() {
-    return typeOfMotorBike;
-  }
-
-  public void setTypeOfMotorBike(String typeOfMotorBike) {
-    this.typeOfMotorBike = typeOfMotorBike;
-  }
-
-  public int getPower() {
-    return power;
-  }
-
-  public void setPower(int power) {
-    this.power = power;
-  }
-
   @Override
   public BigDecimal getExciseTax() {
     BigDecimal basePrice = originalPrice.add(super.getImportTax());

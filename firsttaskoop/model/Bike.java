@@ -16,23 +16,6 @@ public class Bike extends Vehicle {
     this.bikeType = bikeType;
     this.frameMaterial = frameMaterial;
   }
-
-  public String getBikeType() {
-    return bikeType;
-  }
-
-  public void setBikeType(String bikeType) {
-    this.bikeType = bikeType;
-  }
-
-  public String getFrameMaterial() {
-    return frameMaterial;
-  }
-
-  public void setFrameMaterial(String frameMaterial) {
-    this.frameMaterial = frameMaterial;
-  }
-
   @Override
   public BigDecimal getExciseTax() {
 
