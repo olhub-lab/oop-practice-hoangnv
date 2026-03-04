@@ -1,8 +1,9 @@
 package firsttaskoop.repository;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class DBConnector {
 
@@ -10,17 +11,33 @@ public class DBConnector {
   private static final String USER = "root";
   private static final String PASS = "145hoang";
 
-  static {
-    try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-      System.out.println("Driver đã được load thành công !!!");
-    } catch (ClassNotFoundException e) {
-      System.err.println("Không tìm thấy Driver MySQL!");
-      e.printStackTrace();
+  private static DBConnector instance;
+
+  private HikariDataSource dataSource;
+
+  private DBConnector() {
+    HikariConfig config = new HikariConfig();
+
+    config.setJdbcUrl(URL);
+    config.setUsername(USER);
+    config.setPassword(PASS);
+
+    config.setMaximumPoolSize(10);
+    config.setConnectionTimeout(5000);
+    config.setIdleTimeout(600000);
+    config.setMaxLifetime(1800000);
+
+    dataSource = new HikariDataSource(config);
+    System.out.println("Đã khởi tạo kết nối database thành công !!!!");
+  }
+  public static DBConnector getInstance() {
+    if (instance == null) {
+      instance = new DBConnector();
     }
+    return instance;
   }
 
-  public static Connection getConnection() throws SQLException {
-    return DriverManager.getConnection(URL, USER, PASS);
+  public Connection getConnection() throws SQLException {
+    return dataSource.getConnection();
   }
 }

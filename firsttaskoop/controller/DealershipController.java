@@ -36,7 +36,7 @@ public class DealershipController {
           showDealerInventoryLogic();
           break;
         default:
-          view.showMessage(">> Vui lòng nhập đúng số thứ tự!!");
+          System.out.println(">> Vui lòng nhập đúng số thứ tự!!");
           break;
       }
     }
@@ -56,47 +56,38 @@ public class DealershipController {
   }
 
   private void showDealerInventoryLogic() {
-    List<Dealership> allDealers = dealershipService.getAllDealerships();
-    Dealership selectedDealer = view.selectDealership(allDealers);
-
+    Dealership selectedDealer = view.selectDealership(dealershipService.getAllDealerships());
     if (selectedDealer != null) {
-      List<Vehicle> inventory = dealershipService.getSuggestedVehicles(selectedDealer.getId(), "");
-      view.listVehicles(inventory);
+      view.listVehicles(selectedDealer.getInventory());
     }
   }
 
   private void sellLogic() {
     Customer customer = view.selectCustomer(dealershipService.getAllCustomers());
-
     Dealership selectedDealer = view.selectDealership(dealershipService.getAllDealerships());
-
-    List<Vehicle> inventory = dealershipService.getSuggestedVehicles(selectedDealer.getId(), "");
-    view.listVehicles(inventory);
+    view.listVehicles(selectedDealer.getInventory());
 
     String model = view.askNotEmpty("Tên xe mua");
-
-    boolean success = dealershipService.sellVehicle(customer.getId(), model,
-        selectedDealer.getId());
+    boolean success = dealershipService.sellVehicle(customer,model,selectedDealer);
 
     if (success) {
-      view.showMessage("MUA XE THÀNH CÔNG!");
+      view.showMessage("MUA XE THÀNH CÔNG! Số dư: " + customer.getAccountBalance());
     } else {
       view.showMessage("Giao dịch thất bại (Hết hàng hoặc thiếu tiền)");
 
-      List<Vehicle> suggestedVehicles = dealershipService.getSuggestedVehicles(
-          selectedDealer.getId(), model);
+      List<Vehicle> suggestedVehicles = dealershipService.getSuggestedVehicles(selectedDealer, model);
+
       view.showSuggestions(suggestedVehicles);
     }
   }
 
   private void addVehicleLogic() {
-    List<Dealership> dealers = dealershipService.getAllDealerships();
-    if (dealers.isEmpty()) {
+    if (dealershipService.getAllDealerships().isEmpty()) {
       view.showMessage("Phải có đại lý mới được nhập xe!!");
       return;
     }
 
-    Dealership targetDealer = view.selectDealership(dealers);
+    Dealership targetDealer = view.selectDealership(dealershipService.getAllDealerships());
     if (targetDealer == null) {
       return;
     }
@@ -112,38 +103,35 @@ public class DealershipController {
     Origin origin = view.askOrigin();
     int qty = view.askInt("Số lượng nhập");
 
-    int dealerId = targetDealer.getId();
-
     switch (type) {
       case 1: {
         int seats = view.askInt("Số chỗ ngồi");
         String fuel = view.askNotEmpty("Loại nhiên liệu");
         int cap = view.askInt("Dung tích xi lanh");
         String body = view.askNotEmpty("Kiểu dáng (Sedan/SUV...)");
-        dealershipService.addCarToDealer(dealerId, name, manufacturer, year, price, origin, seats,
-            fuel, cap, body, qty);
+        dealershipService.addCarToDealer(targetDealer,
+            name, manufacturer, year, price, origin,
+            seats, fuel, cap, body, qty);
         break;
       }
       case 2: {
         int cap = view.askInt("Phân khối (cc)");
         int power = view.askInt("Công suất");
         String bikeType = view.askNotEmpty("Loại xe máy (Sport/Naked...)");
-        dealershipService.addMotorbikeToDealer(dealerId, name, manufacturer, year, price, origin,
-            cap, power, bikeType, qty);
+        dealershipService.addMotorbikeToDealer(targetDealer, name, manufacturer, year, price, origin, cap, power, bikeType, qty);
         break;
       }
       case 3: {
         String bikeType = view.askNotEmpty("Loại xe đạp");
         String material = view.askNotEmpty("Chất liệu khung");
-        dealershipService.addBikeToDealer(dealerId, name, manufacturer, year, price, origin,
-            bikeType, material, qty);
+        dealershipService.addBikeToDealer(targetDealer, name, manufacturer, year, price, origin, bikeType, material, qty);
         break;
       }
       default:
         view.showMessage("Loại xe không hợp lệ!");
-        return;
+        break;
     }
-    view.showMessage("Đã cập nhật kho xe vào Database thành công!");
+    view.showMessage("Đã cập nhật kho xe thành công!");
   }
 
   private void addCustomerLogic() {
@@ -153,6 +141,6 @@ public class DealershipController {
     BigDecimal balance = view.askBigDecimal("Số dư nạp vào");
 
     dealershipService.addCustomer(name, phone, address, balance);
-    view.showMessage("Đăng ký khách hàng vào Database thành công!");
+    view.showMessage("Đăng ký khách hàng thành công!");
   }
 }
